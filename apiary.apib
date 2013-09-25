@@ -1,6 +1,6 @@
 HOST: http://localhost:8321/
 
---- SlicerWeb ---
+--- SlicerWeb v1.0 ---
 ---
 Documentation for the [SlicerWeb project](https://github.com/dblezek/SlicerWeb).
 All comments can be written in (support [Markdown](http://daringfireball.net/projects/markdown/syntax) syntax)
@@ -10,22 +10,62 @@ All comments can be written in (support [Markdown](http://daringfireball.net/pro
 /slicer
 The following is a section of resources related to the shopping cart
 --
-List products added into your shopping-cart. (comment block again in Markdown)
-GET /shopping-cart
+Read-Evaluate-Print-Loop
+
+Compile the Python source code listed, execute it and return the output.
+GET /slicer/repl?source=print%20hi
 < 200
-< Content-Type: application/json
-{ "items": [
-{ "url": "/shopping-cart/1", "product":"2ZY48XPZ", "quantity": 1, "name": "New socks", "price": 1.25 }
-] }
+< Content-Type: text/plain
+hi
 
+View brain tumor data
 
-Save new products in your shopping cart
+Searches for several `MRML` nodes and displays the results.
 POST /shopping-cart
 > Content-Type: application/json
 { "product":"1AB23ORM", "quantity": 2 }
 < 201
 < Content-Type: application/json
 { "status": "created", "url": "/shopping-cart/2" }
+
+GET /slicer/mrml
+< 200
+< Content-Type: application/json
+
+
+GET /slicer/scene
+< 200
+< Content-Type: application/json
+
+
+GET /slicer/timeimage
+< 200
+< Content-Type: image/png
+
+
+GET /slicer/slice
+< 200
+< Content-Type: image/png
+
+
+GET /slicer/threeD
+< 200
+< Content-Type: image/png
+
+
+GET /slicer/transform
+< 200
+< Content-Type: image/png
+
+
+GET /slicer/volumeSelection
+< 200
+< Content-Type: text/plain
+
+
+GET /slicer/volume
+< 200
+< Context-Type: application-octet-stream
 
 
 -- Payment Resources --
