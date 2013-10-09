@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+        <meta charset="utf-8">
+        <title>Slicer / Mandolin REPL</title>
+        <style type="text/css" media="screen">
+        #editor, #response { 
+            position: relative;
+            width: 100%;
+            height: 400px;
+        }
+        </style>
+    </head>
+<body>
+
+<div style="position:relative; height=450px;">
+<div id="editor">
+print """I am the REPL (Read-Eval-Print Loop) for Mandolin"""
+print "hi from Mandolin!"
+print "use Ctrl-Return or Command-Return to execute this buffer in Slicer and return the result"
+</div>
+</div>
+
+<div style="position:relative; height=450px;">
+<div id="response">
+    This is the response area, execute the code using 'Command-Return'
+</div>
+</div>
+
+<script src="js/src-min-noconflict/ace.js" type="text/javascript" charset="utf-8"></script>
+<script src="js/jquery-2.0.3.min.js" type="text/javascript" charset="utf-8"></script>
+<script>
+    var editor = ace.edit("editor");
+    editor.setTheme("ace/theme/monokai");
+    editor.getSession().setMode("ace/mode/python");
+    var response = ace.edit("response")
+    response.setTheme("ace/theme/textmate");
+    response.getSession().setMode("ace/mode/python");
+    response.setReadOnly = true
+
+    editor.commands.addCommand({
+        name: 'eval',
+        bindKey: {win: 'Ctrl-Return', mac: 'Command-Return'},
+        exec: function ( editor ) {
+            // Send the body of the buffer to Slicer and return the response
+            $.ajax({
+                url: '/repl',
+                type: 'PUT',
+                data: { 'code': editor.getValue() },
+                success: function (reply) {
+                    // $('#response').html ( reply.out )
+                    response.setValue ( reply.out )
+                }
+            })
+        }
+    })
+
+
+</script>
+</body>
+</html>

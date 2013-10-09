@@ -16,3 +16,4 @@ def hello():
     return 'Hello World'
 
 import mrml
+import repl
