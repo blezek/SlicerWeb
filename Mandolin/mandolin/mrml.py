@@ -30,3 +30,20 @@ def mrml():
       item['key'] = key
       response[key] = item
   return response
+
+@app.route("/mrml/models")
+def list_models():
+  response = {}
+  items = response['models'] = []
+  count = slicer.mrmlScene.GetNumberOfNodesByClass("vtkMRMLModelNode")
+  for i in xrange(count):
+    n = slicer.mrmlScene.GetNthNodeByClass ( i, "vtkMRMLModelNode" )
+    if n.GetHideFromEditors():
+      continue
+    item = {}
+    item['name'] = n.GetName()
+    item['display_visibility'] = n.GetDisplayVisibility()
+    item['display_node_id'] = n.GetDisplayNodeID()
+    item['id'] = n.GetID()
+    items.append ( item )
+  return response

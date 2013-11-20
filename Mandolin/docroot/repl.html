@@ -1,75 +1,73 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-        <meta charset="utf-8">
-        <title>Slicer / Mandolin REPL</title>
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <style type="text/css" media="screen">
+    <meta charset="utf-8">
+    <title>Slicer / Mandolin REPL</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style type="text/css" media="screen">
 
-body {
+    body {
       padding-top: 50px;
 
-}
-html, body, #outer {
+  }
+  html, body, #outer {
     height: 100%;
     overflow: hidden;
 }
-    .fill {
-        min-height:100%;
-        height:100%;
-    }
-  #editor { 
-        position: relative !important;
-        margin: auto;
-        height: 400px;
-        width: 100%;
-        }
-  #response { 
-        position: relative !important;
-        margin: auto;
-        height: 400px;
-        width: 100%;
-    }
-    </style>
+.fill {
+    min-height:100%;
+    height:100%;
+}
+#editor { 
+    position: relative !important;
+    margin: auto;
+    height: 400px;
+    width: 100%;
+}
+#response { 
+    position: relative !important;
+    margin: auto;
+    height: 400px;
+    width: 100%;
+}
+</style>
 
-        <!-- Bootstrap core CSS -->
-        <link href="css/bootstrap.css" type="text/css" rel="stylesheet">
+<!-- Bootstrap core CSS -->
+<link href="css/bootstrap.css" type="text/css" rel="stylesheet">
 
-    </head>
+</head>
 <body>
 
-<div class="navbar navbar-fixed-top">
-   <!-- Rest of nav bar chopped from here -->
- <div class="container">
+    <div class="navbar navbar-fixed-top">
+     <!-- Rest of nav bar chopped from here -->
+     <div class="container">
         <div class="navbar-header">
           <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
-          </button>
-          <a class="navbar-brand" href="#">Project name</a>
-        </div>
-        <div class="collapse navbar-collapse">
-          <ul class="nav navbar-nav">
-            <li class="active"><a href="#">Home</a></li>
-            <li><a href="#about">About</a></li>
-            <li><a href="#contact">Contact</a></li>
-          </ul>
-        </div><!--/.nav-collapse -->
-      </div>
-  </div>
-<div class="container-fluid fill">
-    <div id="outer" class="fill">
-<div id="editor">
-print """I am the REPL (Read-Eval-Print Loop) for Mandolin"""
-print "hi from Mandolin!"
-print "use Ctrl-Return or Command-Return to execute this buffer in Slicer and return the result"
+        </button>
+        <a class="navbar-brand" href="#">Project name</a>
+    </div>
+    <div class="collapse navbar-collapse">
+      <ul class="nav navbar-nav">
+        <li class="active"><a href="#">Home</a></li>
+        <li><a href="#about">About</a></li>
+        <li><a href="#contact">Contact</a></li>
+    </ul>
+</div><!--/.nav-collapse -->
 </div>
+</div>
+<div id="outer" class="fill">
+    <div id="editor">
+        print """I am the REPL (Read-Eval-Print Loop) for Mandolin"""
+        print "hi from Mandolin!"
+        print "use Ctrl-Return or Command-Return to execute this buffer in Slicer and return the result"
+    </div>
 
-<div id="response">
-    This is the response area, execute the code using 'Command-Return'
-</div>
-</div>
+    <div id="response">
+        This is the response area, execute the code using 'Command-Return'
+    </div>
 </div>
 
 
@@ -84,9 +82,9 @@ print "use Ctrl-Return or Command-Return to execute this buffer in Slicer and re
 
 
 
-<script src="js/src-min-noconflict/ace.js" type="text/javascript" charset="utf-8"></script>
-<script src="js/jquery-2.0.3.min.js" type="text/javascript" charset="utf-8"></script>
-<script>
+    <script src="js/src-min-noconflict/ace.js" type="text/javascript" charset="utf-8"></script>
+    <script src="js/jquery-2.0.3.min.js" type="text/javascript" charset="utf-8"></script>
+    <script>
     var editor = ace.edit("editor");
     editor.setTheme("ace/theme/monokai");
     editor.getSession().setMode("ace/mode/python");
@@ -121,6 +119,6 @@ print "use Ctrl-Return or Command-Return to execute this buffer in Slicer and re
     resizeAce()
 
 
-</script>
+    </script>
 </body>
 </html>
