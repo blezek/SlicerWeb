@@ -42,3 +42,14 @@ pip-log.txt
 # Exclude Kdevelop4 files ...
 .kdev*
 FlaskServer
+
+
+
+# NPM packages folder.
+node_modules/
+
+# Brunch folder for temporary files.
+tmp/
+
+# Brunch output folder.
+public/
