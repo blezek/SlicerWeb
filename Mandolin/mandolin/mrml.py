@@ -18,18 +18,23 @@ def grabObject ( node ):
           pass
   return item
 
+@app.route("/nodes")
+def nodes():
+  return mrml();
 
 @app.route("/mrml")
 def mrml():
-  response = {}
+  response = []
   nodes = slicer.util.getNodes('*')
   for key in nodes.keys():
     node = nodes[key]
     if not node.GetHideFromEditors():
       item = grabObject ( node )
-      item['key'] = key
-      response[key] = item
-  return response
+      item['id'] = key
+      item['name'] = key
+      response.append ( item )
+  final = { 'nodes':response}
+  return final
 
 @app.route("/mrml/models")
 def list_models():
