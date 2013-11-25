@@ -1,9 +1,20 @@
-THis is the MRML tree!
 
-<p/>
-I am the model {{model}}
-<p/>
-
-{{#each model}}
-  Nothing to see, move on {{this.id}}<p/>
-{{/each}}
+<div class="container-fluid">
+		<div class="row-fluid full-height">
+			<div class="span2">
+				<table class='table'>
+					<thead>
+						<tr><th>Nodel</th></tr>
+					</thead>
+					{{#each model}}
+					<tr><td>
+						{{node-item node=this}}
+					</td></tr>						
+					{{/each}}
+				</table>
+			</div>
+			<div class="span10 full-height" id="viewer">
+				<div id="render" class="full-height">
+			</div>
+		</div>
+	</div>
