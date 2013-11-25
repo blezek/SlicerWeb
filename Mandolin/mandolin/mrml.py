@@ -7,13 +7,12 @@ def grabObject ( node ):
   if not node.GetHideFromEditors():
     item = {}
     item['class'] = node.GetClassName()
-    item['properties'] = {}
     for method in dir ( node ):
       if "Get" in method:
         try:
           value = method.replace ( "Get", "" )
           prop = getattr ( node, method )()
-          item['properties'][value] = repr( prop )
+          item[value] = repr( prop )
         except:
           pass
   return item
@@ -32,6 +31,7 @@ def mrml():
       item = grabObject ( node )
       item['id'] = key
       item['name'] = key
+      item['type'] = item['class']
       response.append ( item )
   final = { 'nodes':response}
   return final
