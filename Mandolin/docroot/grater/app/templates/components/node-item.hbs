@@ -1,2 +1,12 @@
 
-<span {{action "toggleBody"}}>{{node.name}}:</span><small class='muted' >{{node.type}}</small> {{#if isShowingBody}} <p>{{node.displayVisibility}}</p> {{/if}}
+<span {{action "toggleBody"}}>{{node.name}}:</span><small class='muted' >{{node.type}}</small>
+<p><span {{action "report" bubbles=true}}>report</span></p>
+{{#if isShowingBody}}
+<p>
+	{{#if node.display}}
+	<span {{action "hide" node}}>Hide</span>
+	{{else}}
+	<span {{action "load" node}}>Display</span>
+	{{/if}}
+</p>
+{{/if}}

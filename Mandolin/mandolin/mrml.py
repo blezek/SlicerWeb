@@ -1,6 +1,7 @@
 from app import app
 from __main__ import vtk, qt, ctk, slicer
 import json, inspect, types
+from bottle import static_file
 
 
 def grabObject ( node ):
@@ -52,3 +53,19 @@ def list_models():
     item['id'] = n.GetID()
     items.append ( item )
   return response
+
+@app.route("/mrml/data/<id>")
+def get_data(id="Skin.vtk"):
+  import tempfile, os.path, os
+  # Get the MRML node
+  node = slicer.mrmlScene.GetFirstNodeByName(id)
+  if not node:
+    bottle.response.status = "404 Node: " + id + " was not found"
+    return bottle.response
+  # Get the VTK data
+  # Construct a file by id
+  fd, filename = tempfile.mkstemp(suffix=".vtk")
+  os.close(fd)
+  slicer.util.saveNode ( node, filename )
+  return static_file( os.path.basename(filename), root=os.path.dirname(filename) )
+
