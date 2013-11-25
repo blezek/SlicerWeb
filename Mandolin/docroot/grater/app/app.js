@@ -1,9 +1,10 @@
-App = Ember.Application.create()
+App = Ember.Application.create({})
 
 
 // Routes go here
 App.Router.map(function() {
-	this.route("node")
+	this.resource("node")
+	this.resource("about")
 })
 
 // Connecting to Slicer
