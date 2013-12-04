@@ -1,0 +1,12 @@
+
+<span {{action "toggleBody"}}>{{this.name}}:</span><small class='muted' >{{this.type}}</small>
+<p><button type="button" class="btn btn-default btn-sm" {{action "report" this}}>report</button></p>
+{{#if isShowingBody}}
+<p>
+	{{#if this.display}}
+	<span {{action "hide" this}}>Hide</span>
+	{{else}}
+	<span {{action "load" this}}>Display</span>
+	{{/if}}
+</p>
+{{/if}}

@@ -1,12 +1,11 @@
 
 <span {{action "toggleBody"}}>{{node.name}}:</span><small class='muted' >{{node.type}}</small>
-<p><span {{action "report" bubbles=true}}>report</span></p>
 {{#if isShowingBody}}
 <p>
 	{{#if node.display}}
-	<span {{action "hide" node}}>Hide</span>
+	<button type="button" class="btn btn-default btn-sm"  {{action "hide" node}}>Hide</button>
 	{{else}}
-	<span {{action "load" node}}>Display</span>
+	<button type="button" class="btn btn-default btn-sm" {{action "load" node}}>Display</button>
 	{{/if}}
 </p>
 {{/if}}

@@ -3,8 +3,9 @@ App = Ember.Application.create({})
 
 // Routes go here
 App.Router.map(function() {
-	this.resource("node")
 	this.resource("about")
+	this.resource("view")
+// 	this.resource("render")
 })
 
 // Connecting to Slicer

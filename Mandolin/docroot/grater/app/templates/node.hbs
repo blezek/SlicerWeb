@@ -1,21 +1,13 @@
 
-<div class="container-fluid">
-		<div class="row-fluid full-height">
-			<div class="span2">
-				<table class='table'>
-					<thead>
-						<tr><th>Nodel</th></tr>
-					</thead>
-					{{#each model}}
-					<tr><td>
-						{{node-item node=this}}
-					</td></tr>						
-					{{/each}}
-				</table>
-				<button {{action 'report'}}>Report</button>
-			</div>
-			<div class="span10 full-height" id="viewer">
-				<div id="render" class="full-height">
-			</div>
-		</div>
-	</div>
+<table class='table'>
+	<thead>
+		<tr><th>Node
+			<button type="button" class="btn btn-default btn-sm" {{action 'report'}}>Report</button>
+		</th></tr>
+	</thead>
+	{{#each model}}
+	<tr><td>
+		{{node-item node=this}}
+	</td></tr>						
+	{{/each}}
+</table>

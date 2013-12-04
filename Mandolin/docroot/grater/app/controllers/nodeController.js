@@ -1,8 +1,7 @@
 // This is the Node controller
 
 App.NodeController = Ember.Component.extend({
-	renderer: null,
-	
+	needs: 'render',
 	actions: {
 		load: function ( node ) {
 			alert ( "Loading in node route" )
@@ -11,8 +10,16 @@ App.NodeController = Ember.Component.extend({
 			alert ( "Hiding in node route" )
 		}, 
 		report: function() { 
-			alert ( 'NodeRouter')
+			var rc = this.get('controllers')
+			console.log ( rc )
+			alert ( 'NodeController, now sending to ' + rc)
 		}
 	}
 
+})
+
+
+App.NodeView = Ember.View.extend({
+	templateName: 'node',
+	name: 'NodeView'
 })

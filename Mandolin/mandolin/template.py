@@ -12,7 +12,7 @@ import mako
 
 @app.route('/static/<name:path>')
 def simple_static ( name ):
-	return static_file('static/' + name, root=app.config['docroot'])
+	return static_file( name, root=app.config['docroot'])
 
 # Run everything through the template engine
 @app.route('/template/<name:path>')

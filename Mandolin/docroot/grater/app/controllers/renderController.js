@@ -1,24 +1,24 @@
-App.NodeRoute = Ember.Route.extend({
-	model: function() {
-		console.log ( "Grabbing data!")
-		var nodes = this.store.find ( 'node' )
-		console.log ( nodes )
-		return nodes
-	},
+// This is the Node controller
+
+App.RenderController = Ember.Component.extend({
+	
 	actions: {
 		load: function ( node ) {
-			alert ( "Loading in node route" )
+			alert ( "Render Controller Loading in node route" )
 		},
 		hide: function ( node ) {
 			alert ( "Hiding in node route" )
 		}, 
 		report: function() { 
-			alert ( 'NodeRouter')
+			alert ( 'RenderController')
 		}
 	}
+
 })
 
-App.NodeView = Ember.View.extend({
+
+App.RenderView = Ember.View.extend({
+	templateName: 'render',
 	didInsertElement: function () {
 		console.log("Initializing Renderer")
 		console.log ( "render element: ", $("#render"))
