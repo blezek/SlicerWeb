@@ -1,12 +1,10 @@
 
-<span {{action "toggleBody"}}>{{this.name}}:</span><small class='muted' >{{this.type}}</small>
-<p><button type="button" class="btn btn-default btn-sm" {{action "report" this}}>report</button></p>
-{{#if isShowingBody}}
+<i  {{bind-attr class="isShowingBody:icon-chevron-up:icon-chevron-down"}} {{action "toggleBody" this}}></i>
+{{this.name}}:<small class='muted' >{{this.type}}</small>
+{{#if this.isShowingBody}}
 <p>
-	{{#if this.display}}
-	<span {{action "hide" this}}>Hide</span>
-	{{else}}
-	<span {{action "load" this}}>Display</span>
-	{{/if}}
+	<i  {{bind-attr class="display:icon-eye-open:icon-eye-close"}} {{action toggle this}}></i>
+	{{#if this.display}}Displayed{{else}}Hidden{{/if}}
+
 </p>
 {{/if}}

@@ -1,13 +1,13 @@
 
 <table class='table'>
 	<thead>
-		<tr><th>Node
-			<button type="button" class="btn btn-default btn-sm" {{action 'report'}}>Report</button>
+		<tr><th>
+			Node
 		</th></tr>
 	</thead>
 	{{#each model}}
 	<tr><td>
-		{{node-item node=this}}
+		{{partial "nodeinfo"}}
 	</td></tr>						
 	{{/each}}
 </table>

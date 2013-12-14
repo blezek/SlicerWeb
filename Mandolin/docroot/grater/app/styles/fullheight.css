@@ -11,12 +11,10 @@ height:100%;
 
 #viewer {
 	overflow: hidden;
-	height:100%;
 }
 
 .ember-view {
 	height: 100%;
-	overflow: hidden;
 }
 
 .viewer {

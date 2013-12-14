@@ -57,6 +57,8 @@ def list_models():
 @app.route("/mrml/data/<id>")
 def get_data(id="Skin.vtk"):
   import tempfile, os.path, os
+  # Pull off the trailing .stl
+  id = id[0:-4]
   # Get the MRML node
   node = slicer.mrmlScene.GetFirstNodeByName(id)
   if not node:
@@ -64,8 +66,8 @@ def get_data(id="Skin.vtk"):
     return bottle.response
   # Get the VTK data
   # Construct a file by id
-  fd, filename = tempfile.mkstemp(suffix=".vtk")
+  fd, filename = tempfile.mkstemp(suffix=".stl")
   os.close(fd)
   slicer.util.saveNode ( node, filename )
-  return static_file( os.path.basename(filename), root=os.path.dirname(filename) )
+  return static_file( os.path.basename(filename), root=os.path.dirname(filename), mimetype='text/html' )
 

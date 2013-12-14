@@ -1,4 +1,13 @@
 
+
+
+  // include all used X-classes here
+  // this is only required when using the xtk-deps.js file
+  goog.require('X.renderer3D');
+  goog.require('X.cube');
+  goog.require('X.mesh');
+
+
 function initializeRender(container) {
 // create and initialize a 3D renderer
   var r = new X.renderer3D();
@@ -16,7 +25,7 @@ function initializeRender(container) {
   // [1,1,1] (== white) is also the default so this can be skipped aswell
   cube.color = [0, 0, 1];
   
-  r.add(cube); // add the cube to the renderer
+  // r.add(cube); // add the cube to the renderer
   r.render();
   return r;
   }
