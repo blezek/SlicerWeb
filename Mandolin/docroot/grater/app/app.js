@@ -35,3 +35,13 @@ App.ViewerRoute = Ember.Route.extend({
   }
 });
 
+
+App.ViewerView = Ember.View.extend({
+	didInsertElement: function () {
+		console.log("Initializing Viewer")
+		this.$().find('.splitter').kendoSplitter({
+			orientation: "horizontal",
+			panes: [ { size: "20%" }, {} ]
+		})
+ 	}
+})
