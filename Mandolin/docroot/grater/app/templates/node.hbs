@@ -1,13 +1,13 @@
 
-<table class='table'>
-	<thead>
-		<tr><th>
-			Node
-		</th></tr>
-	</thead>
-	{{#each model}}
-	<tr><td>
-		{{partial "nodeinfo"}}
-	</td></tr>						
+<ul class="navigation">
+{{#each model}}
+	<li class="navigationLi">
+		<div class='menu'>
+			<div class='tabbox'>
+				<div class='caption'>{{name}}</div>
+				{{name}}
+			</div>
+		</div>
+	</li>
 	{{/each}}
-</table>
+</ul>

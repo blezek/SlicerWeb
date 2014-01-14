@@ -2,10 +2,43 @@
 
 /////////  Display No more
 
+
+
+  // include all used X-classes here
+  // this is only required when using the xtk-deps.js file
+  goog.require('X.renderer3D');
+  goog.require('X.cube');
+  goog.require('X.mesh');
+
+
+function initializeRender(container) {
+// create and initialize a 3D renderer
+  var r = new X.renderer3D();
+  r.container = container
+  r.init();
+  // create a cube
+  cube = new X.cube();
+  
+  // setting the edge length can also be skipped since 20 is the default
+  cube.lengthX = cube.lengthY = cube.lengthZ = 20;
+  
+  // can also be skipped since [0,0,0] is the default center
+  cube.center = [0, 0, 0];
+  
+  // [1,1,1] (== white) is also the default so this can be skipped aswell
+  cube.color = [0, 0, 1];
+  
+  r.add(cube); // add the cube to the renderer
+  r.render();
+  return r;
+  }
+
+
 App.DisplayView = Ember.View.extend({
 	templateName: 'display',
 	didInsertElement: function () {
 		console.log("Initializing Renderer")
+		
 		console.log ( "render element: ", $("#render"))
 		console.log ("Controller: ", this.get('controller'))
 		this.set ( 'controller.renderer', initializeRender("render") )
@@ -40,61 +73,3 @@ App.DisplayController = Ember.Controller.extend({
 	}
 })
 
-// // This is the Node controller
-
-
-
-// // App.RenderView = Ember.View.extend({
-// // 	templateName: 'render'
-// // 	// ,
-// // // 	didInsertElement: function () {
-// // // 		console.log("Initializing Renderer")
-// // // 		console.log ( "render element: ", $("#render"))
-// // // 		console.log ("Controller: ", this.get('controller'))
-// // // 		this.set ( 'controller.renderer', initializeRender("render") )
-// // // 	}
-// // })
-
-// // App.RenderController = Ember.Component.extend({
-// // 	needs: 'node',
-// // 	actions: {
-// // 		display: function ( node ) {
-// // 			alert ( "Render Controller Loading in node route" )
-// // 		},
-// // 		hide: function ( node ) {
-// // 			alert ( "Hiding in node route" )
-// // 		}, 
-// // 		report: function() { 
-// // 			alert ( 'RenderController')
-// // 		}
-// // 	}
-
-// // })
-
-
-
-// /////////  Display
-
-// App.DisplayView = Ember.View.extend({
-// 	templateName: 'display'
-// })
-
-// App.DisplayController = Ember.Controller.extend({
-// 	needs: 'node',
-// 	display: 'something',
-// 	actions: {
-// 		hi: function() {
-// 			var n = this.get('controllers.node')
-// 			console.log ( n )
-// 			alert ( "Hi from DisplayController")
-// 			// Send an action to NodeController
-// 			n.send('hi', ' from DisplayController')
-// 		},
-// 		toggle: function(node) {
-// 			console.log("DisplayController: toggle " + node)
-// 			console.log("Current list is: " + this.get ( 'display' ) )
-// 			// this.set ( 'displayList',[node])
-// 			this.set ( 'display', node)
-// 		}
-// 	}
-// })

@@ -53,3 +53,7 @@ tmp/
 
 # Brunch output folder.
 public/
+Mandolin/docroot/bootstrap-3.0.0
+Mandolin/docroot/grater-first-pass
+Mandolin/docroot/remote
+Mandolin/docroot/simple
