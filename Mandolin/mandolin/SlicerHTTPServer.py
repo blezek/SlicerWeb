@@ -27,7 +27,7 @@ class SlicerHTTPServer(WSGIServer):
 
   def onSocketNotify(self,fileno):
       # based on SocketServer.py: self.serve_forever()
-      self.logMessage('got request on %d' % fileno)
+      # self.logMessage('got request on %d' % fileno)
       self._handle_request_noblock()
 
   def start(self):
