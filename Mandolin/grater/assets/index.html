@@ -3,32 +3,46 @@
 <head>
   <meta charset="utf-8">
   <title>Grater</title>
-  <link rel="stylesheet" href="css/grater.css" />
   <link rel="stylesheet" href="css/foundation.css" />
+  <link rel="stylesheet" href="css/grater.css" />
 </head>
 
 <body>
 
-<nav class="top-bar" data-topbar>
-  <ul class="title-area">
-    <li class="name">
-      <h1><a href="#">Grater</a></h1>
-    </li>
-    <li class="toggle-topbar menu-icon"><a href="#">Menu</a></li>
-  </ul>
-
-  <section class="top-bar-section">
-    <!-- Right Nav Section -->
-    <ul class="right">
-      <li><a href="#">Right Button</a></li>
+  <nav class="top-bar" data-topbar>
+    <ul class="title-area">
+      <li class="name">
+        <h1><a href="#">Grater</a></h1>
+      </li>
+      <li class="toggle-topbar menu-icon"><a href="#">Menu</a></li>
     </ul>
 
-  </section>
+    <section class="top-bar-section">
+      <!-- Right Nav Section -->
+      <ul class="right">
+        <li><a href="#">Right Button</a></li>
+      </ul>
+    </section>
+  </nav>
 
-</nav>
 
-
-
+  <div class="render" id="render">
+    <ul class="grater-menu side-nav">
+      <li><a href="#" data-dropdown="drop1">Link 1</a></li>
+      <li>
+        <a href="#" data-dropdown="drop2">content</a>
+      </li>
+      <li>Link 1</li>
+    </ul>
+    <ul id="drop1" class="f-dropdown" data-dropdown-content>
+      <li>Link1</li>
+      <li>Link2</li>
+    </ul>
+    <div id="drop2" data-dropdown-content class="f-dropdown content">
+      This is dropdown content
+      <h1>Oh yeah</h1>
+    </div>
+  </div>
 
 
 
