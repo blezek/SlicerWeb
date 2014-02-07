@@ -13,7 +13,7 @@ var gulp = require('gulp'),
     lr = require('tiny-lr'),
     server = lr();
 
-var js = ['js/**/*.js', 'lib/js/**/*.js']
+var js = ['lib/js/**/*.js', 'js/**/*.js']
 var assets = ['assets/**']
 var css = ['css/**/*.css']
 
