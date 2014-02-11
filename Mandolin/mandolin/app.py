@@ -2,7 +2,7 @@ from bottle import *
 
 app = Bottle();
 
-# import mrml
+import mrml
 # import repl
 # import template
 import mimetypes

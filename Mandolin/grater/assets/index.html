@@ -28,35 +28,49 @@
 
   <div class="render" id="render">
     <ul class="grater-menu side-nav">
-      <li><a href="#" data-dropdown="drop1">Link 1</a></li>
       <li>
-        <a href="#" data-dropdown="drop2">content</a>
+        <a href="#" data-dropdown="drop_cube">Cube</a>
       </li>
-      <li>Link 1</li>
-    </ul>
-    <ul id="drop1" class="f-dropdown" data-dropdown-content>
-      <li>Link1</li>
-      <li>Link2</li>
-    </ul>
-    <div id="drop2" data-dropdown-content class="f-dropdown content">
-      This is dropdown content
-      <h1>Oh yeah</h1>
-    </div>
+      <li>
+        <a href="#" data-dropdown="drop_wm">hemispheric_white_matter.vtk</a>
+      </li>
+      <li>
+        <a href="#" data-dropdown="drop_sb">skull_bone.vtk</a>
+      </li>
+      <li>
+       <div>
+        Controls go here
+      </div>
+    </li>
+  </ul>
+
+  <div id="drop_cube" data-dropdown-content class="f-dropdown content">
+  </div>
+  <div id="drop_wm" data-dropdown-content class="f-dropdown content">
+  </div>
+  <div id="drop_sb" data-dropdown-content class="f-dropdown content">
   </div>
 
+</div>
 
 
-  <script src="js/grater.js"></script>
-  <script src="js/foundation.js"></script>
 
-  <!--  Support live reload -->
-  <script>document.write('<script src="http://'
-    + (location.host || 'localhost').split(':')[0]
-    + ':35729/livereload.js?snipver=1"></'
-    + 'script>')</script>
 
-  <script>
-  $(document).foundation();
-  </script>
+<script type="text/javascript" src="js/X/lib/google-closure-library/closure/goog/base.js"></script>
+<script type="text/javascript" src="js/X/xtk-deps.js"></script>
+
+<script src="js/foundation.js"></script>
+<script src="js/vendor.js"></script>
+<script src="js/grater.js"></script>
+
+<!--  Support live reload -->
+<script>document.write('<script src="http://'
+  + (location.host || 'localhost').split(':')[0]
+  + ':35729/livereload.js?snipver=1"></'
+  + 'script>')</script>
+
+<script>
+$(document).foundation();
+</script>
 </body>
 </html>

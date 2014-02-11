@@ -14,3 +14,11 @@ html, body {
   color: #888;
   margin-left: 10px;
 }
+
+.f-dropdown.content {
+  max-width: 300px;
+}
+
+.dg input[type=text] {
+  height: 100%;
+}

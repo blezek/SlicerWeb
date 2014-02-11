@@ -2,7 +2,7 @@ from app import app
 from __main__ import vtk, qt, ctk, slicer
 import json, inspect, types
 from bottle import static_file
-
+import bottle
 
 def grabObject ( node ):
   if not node.GetHideFromEditors():
@@ -61,6 +61,7 @@ def list_models():
 
 @app.route("/mrml/data/<id>")
 def get_data(id):
+  print "Getting data for {}".format ( id )
   import tempfile, os.path, os
   # Pull off the trailing .stl
   suffix = '.stl'
