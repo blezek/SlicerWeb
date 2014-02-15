@@ -64,6 +64,12 @@ $(function() {
     meshGUI.open()
     document.getElementById('drop_wm').appendChild ( gui.domElement )
 
+    gui = new dat.GUI({autoPlace: false});
+    meshGUI = gui.addFolder("mesh")
+    meshGUI.add(wm, 'visible').listen()
+    meshGUI.open()
+    document.getElementById("test_div").appendChild(gui.domElement)
+
   }
 
   render.render();

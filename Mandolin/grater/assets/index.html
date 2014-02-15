@@ -8,7 +8,6 @@
 </head>
 
 <body>
-
   <nav class="top-bar" data-topbar>
     <ul class="title-area">
       <li class="name">
@@ -38,39 +37,39 @@
         <a href="#" data-dropdown="drop_sb">skull_bone.vtk</a>
       </li>
       <li>
-       <div>
-        Controls go here
-      </div>
-    </li>
-  </ul>
+        <div id="test_div">
+          Controls go here
+        </div>
+      </li>
+    </ul>
 
-  <div id="drop_cube" data-dropdown-content class="f-dropdown content">
+    <div id="drop_cube" data-dropdown-content class="f-dropdown content">
+    </div>
+    <div id="drop_wm" data-dropdown-content class="f-dropdown content">
+    </div>
+    <div id="drop_sb" data-dropdown-content class="f-dropdown content">
+    </div>
+
   </div>
-  <div id="drop_wm" data-dropdown-content class="f-dropdown content">
-  </div>
-  <div id="drop_sb" data-dropdown-content class="f-dropdown content">
-  </div>
-
-</div>
 
 
 
 
-<script type="text/javascript" src="js/X/lib/google-closure-library/closure/goog/base.js"></script>
-<script type="text/javascript" src="js/X/xtk-deps.js"></script>
+  <script type="text/javascript" src="js/X/lib/google-closure-library/closure/goog/base.js"></script>
+  <script type="text/javascript" src="js/X/xtk-deps.js"></script>
 
-<script src="js/foundation.js"></script>
-<script src="js/vendor.js"></script>
-<script src="js/grater.js"></script>
+  <script src="js/foundation.js"></script>
+  <script src="js/vendor.js"></script>
+  <script src="js/grater.js"></script>
 
-<!--  Support live reload -->
-<script>document.write('<script src="http://'
-  + (location.host || 'localhost').split(':')[0]
-  + ':35729/livereload.js?snipver=1"></'
-  + 'script>')</script>
+  <!--  Support live reload -->
+  <script>document.write('<script src="http://'
+    + (location.host || 'localhost').split(':')[0]
+    + ':35729/livereload.js?snipver=1"></'
+    + 'script>')</script>
 
-<script>
-$(document).foundation();
-</script>
+  <script>
+  $(document).foundation();
+  </script>
 </body>
 </html>
