@@ -1,0 +1,23 @@
+{
+  "name": "grater",
+  "version": "1.0.0",
+  "author": "Daniel Blezek <daniel.blezek@gmail.com>",
+  "dependencies": {
+    "foundation": "~5.1.0",
+    "backbone": "",
+    "angular": ""
+  },
+  "devDependencies": {
+    "gulp-livereload": "~1.1.1",
+    "gulp-concat": "~2.1.7",
+    "tiny-lr": "0.0.5",
+    "gulp-notify": "~0.4.3",
+    "gulp-util": "~2.2.14",
+    "gulp": "~3.5.2",
+    "gulp-cache": "~0.1.1",
+    "express": "~3.4.8",
+    "gulp-browserify": "~0.4.4",
+    "gulp-uglify": "~0.2.1",
+    "requirejs": "~2.1.10"
+  }
+}

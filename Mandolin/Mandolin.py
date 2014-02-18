@@ -198,10 +198,10 @@ class MandolinWidget:
 
     import mandolin
     try:
-      SlicerREST = reload ( SlicerREST )
       mandolin = reload ( mandolin )
       reload ( mandolin.mrml )
       reload ( mandolin.app )
+      SlicerREST = reload ( SlicerREST )
     except:
       self.logMessage ( "Error reloading SlicerRest")
 

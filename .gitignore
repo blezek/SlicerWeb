@@ -42,3 +42,23 @@ pip-log.txt
 # Exclude Kdevelop4 files ...
 .kdev*
 FlaskServer
+
+
+# NPM packages folder.
+node_modules/
+
+# Brunch folder for temporary files.
+tmp/
+
+# Brunch output folder.
+public/
+Mandolin/docroot/bootstrap-3.0.0
+Mandolin/docroot/grater-first-pass
+Mandolin/docroot/remote
+Mandolin/docroot/simple
+docroot
+Mandolin/dr
+Mandolin/grater/bower_components
+
+# X
+Mandolin/grater/lib/js/X

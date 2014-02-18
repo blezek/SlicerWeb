@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" >
+<head>
+  <meta charset="utf-8">
+  <title>Grater</title>
+  <link rel="stylesheet" href="css/foundation.css" />
+  <link rel="stylesheet" href="css/grater.css" />
+   <!-- Use RequireJS for loading and the like -->
+  <script data-main="js/grater" src="js/require.js"></script>
+ 
+</head>
+
+<body>
+  <nav class="top-bar" data-topbar>
+    <ul class="title-area">
+      <li class="name">
+        <h1><a href="#">Grater</a></h1>
+      </li>
+      <li class="toggle-topbar menu-icon"><a href="#">Menu</a></li>
+    </ul>
+
+    <section class="top-bar-section">
+      <!-- Right Nav Section -->
+      <ul class="right">
+        <li><a href="#">Right Button</a></li>
+      </ul>
+    </section>
+  </nav>
+
+
+  <div class="render" id="render">
+    <ul class="grater-menu side-nav">
+      <li>
+        <a href="#" data-dropdown="drop_cube">Cube</a>
+      </li>
+      <li>
+        <a href="#" data-dropdown="drop_wm">hemispheric_white_matter.vtk</a>
+      </li>
+      <li>
+        <a href="#" data-dropdown="drop_sb">skull_bone.vtk</a>
+      </li>
+      <li>
+        <div id="test_div">
+          Controls go here
+        </div>
+      </li>
+    </ul>
+
+    <div id="drop_cube" data-dropdown-content class="f-dropdown content">
+    </div>
+    <div id="drop_wm" data-dropdown-content class="f-dropdown content">
+    </div>
+    <div id="drop_sb" data-dropdown-content class="f-dropdown content">
+    </div>
+
+  </div>
+
+
+
+<!--
+  <script type="text/javascript" src="js/X/lib/google-closure-library/closure/goog/base.js"></script>
+  <script type="text/javascript" src="js/X/xtk-deps.js"></script>
+-->
+ 
+
+  <!--  Support live reload -->
+  <script>document.write('<script src="http://'
+    + (location.host || 'localhost').split(':')[0]
+    + ':35729/livereload.js?snipver=1"></'
+    + 'script>')</script>
+
+  <script>
+  </script>
+</body>
+</html>

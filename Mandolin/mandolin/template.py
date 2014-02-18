@@ -12,10 +12,10 @@ import mako
 
 @app.route('/static/<name:path>')
 def simple_static ( name ):
-	return static_file('static/' + name, root=app.config['docroot'])
+	return static_file( name, root=app.config['docroot'])
 
 # Run everything through the template engine
-@app.route('/<name:path>')
+@app.route('/template/<name:path>')
 def server_static(name):
 	if 'logMessage' in app.config:
 		app.config['logMessage']('handling template %s' % name)
