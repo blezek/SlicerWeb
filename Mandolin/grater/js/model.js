@@ -11,9 +11,11 @@ define(function(require) {
     model: MeshModel,
     url: '/rest/mesh',
     parse: function(response) {
+      var m = [];
       for(var i = 0; i < response.mesh.length; i++) {
-        this.push(new MeshModel(response.mesh[i]))
+        m.push(new MeshModel(response.mesh[i]))
       }
+      this.set ( m )
       return this.models;
     }
   });
