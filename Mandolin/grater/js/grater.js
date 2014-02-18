@@ -1,10 +1,10 @@
 
  
-  require(["jquery", "foundation"], function(jquery) {    
+  require(["jquery", 'foundation'], function(jquery) {
      jquery(document).foundation();
   })
 
-require(["xtk", "dat.gui"], function() {
+require(["model", "xtk", "dat.gui"], function(model) {
 // include all used X-classes here
   // this is only required when using the xtk-deps.js file
 /*
@@ -12,6 +12,11 @@ require(["xtk", "dat.gui"], function() {
   goog.require('X.cube');
   goog.require('X.mesh');
 */
+
+
+  meshCollection = new model.MeshCollection();
+  meshCollection.fetch();
+
   render = new X.renderer3D();
   render.container = "render"
   render.init();
