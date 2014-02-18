@@ -15,7 +15,7 @@ require(["model", "xtk", "dat.gui"], function(model) {
 
 
   meshCollection = new model.MeshCollection();
-  setInterval ( function() { meshCollection.fetch() }, 2000 );
+  setInterval ( function() { meshCollection.fetch({remove: true}) }, 2000 );
 
 
   render = new X.renderer3D();
