@@ -19,6 +19,12 @@ html, body {
   max-width: 300px;
 }
 
+/* Control dat.gui */
 .dg input[type=text] {
   height: 100%;
 }
+
+.close-button {
+  visibility:hidden;
+}
+

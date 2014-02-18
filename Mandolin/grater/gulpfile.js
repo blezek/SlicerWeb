@@ -24,7 +24,7 @@ var all = [].concat ( js, assets, css )
 
 gulp.task('build', function() {
     gulp.src(js)
-    .pipe(concat('grater.js'))
+    // .pipe(concat('grater.js'))
     .pipe(gulp.dest('../docroot/js'))
     .pipe(refresh(server));
 
@@ -52,8 +52,11 @@ gulp.task('default', ['lr-server', 'vendor', 'build'], function() {
 gulp.task('vendor', function() {
   
   // Build Foundation
-  var foundation = ['bower_components/foundation/js/vendor/jquery.js', 'bower_components/foundation/js/vendor/**/*.js', 'bower_components/foundation/js/foundation.js']
-  gulp.src(foundation).pipe(concat('foundation.js')).pipe(gulp.dest('../docroot/js'));
+  var foundation = ['bower_components/foundation/js/vendor/jquery.js',
+  'bower_components/foundation/js/vendor/**/*.js',
+  'bower_components/foundation/js/foundation.js',
+  'bower_components/requirejs/require.js']
+  gulp.src(foundation).pipe(gulp.dest('../docroot/js'));
 
   var css = ['bower_components/foundation/css/foundation.css', 'bower_components/foundation/css/normalize.css'];
   gulp.src(css)
@@ -63,9 +66,11 @@ gulp.task('vendor', function() {
   'bower_components/underscore/underscore.js',
   'bower_components/angular/angular.js',
   'bower_components/backbone/backbone.js',
-  'lib/js/dat.gui.js'
+  'lib/js/dat.gui.js',
+  'lib/js/xtk.js'  
   ]
-  gulp.src(js).pipe(concat('vendor.js'))
+  gulp.src(js)
+  // .pipe(concat('vendor.js'))
   .pipe(uglify({outputSourceMap:true}))
   .pipe(gulp.dest('../docroot/js'))
 

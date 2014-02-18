@@ -5,6 +5,9 @@
   <title>Grater</title>
   <link rel="stylesheet" href="css/foundation.css" />
   <link rel="stylesheet" href="css/grater.css" />
+   <!-- Use RequireJS for loading and the like -->
+  <script data-main="js/grater" src="js/require.js"></script>
+ 
 </head>
 
 <body>
@@ -54,13 +57,11 @@
 
 
 
-
+<!--
   <script type="text/javascript" src="js/X/lib/google-closure-library/closure/goog/base.js"></script>
   <script type="text/javascript" src="js/X/xtk-deps.js"></script>
-
-  <script src="js/foundation.js"></script>
-  <script src="js/vendor.js"></script>
-  <script src="js/grater.js"></script>
+-->
+ 
 
   <!--  Support live reload -->
   <script>document.write('<script src="http://'
@@ -69,7 +70,6 @@
     + 'script>')</script>
 
   <script>
-  $(document).foundation();
   </script>
 </body>
 </html>
