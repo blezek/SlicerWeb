@@ -17,6 +17,7 @@
     "gulp-cache": "~0.1.1",
     "express": "~3.4.8",
     "gulp-browserify": "~0.4.4",
-    "gulp-uglify": "~0.2.1"
+    "gulp-uglify": "~0.2.1",
+    "requirejs": "~2.1.10"
   }
 }
