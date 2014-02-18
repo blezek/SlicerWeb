@@ -41,7 +41,7 @@ def mrml():
 def list_models():
   representation = ["POINTS", "LINES", "TRIANGLES" ]
   response = {}
-  items = response['nodes'] = []
+  items = response['mesh'] = []
   count = slicer.mrmlScene.GetNumberOfNodesByClass("vtkMRMLModelNode")
   for i in xrange(count):
     n = slicer.mrmlScene.GetNthNodeByClass ( i, "vtkMRMLModelNode" )
@@ -82,3 +82,7 @@ def get_data(id):
   slicer.util.saveNode ( node, filename )
   return static_file( os.path.basename(filename), root=os.path.dirname(filename), mimetype='text/html' )
 
+# REST endpoint
+@app.route("/rest/mesh")
+def rest_mesh():
+  return list_models();
