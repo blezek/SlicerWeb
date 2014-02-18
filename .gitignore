@@ -44,7 +44,6 @@ pip-log.txt
 FlaskServer
 
 
-
 # NPM packages folder.
 node_modules/
 
@@ -60,3 +59,6 @@ Mandolin/docroot/simple
 docroot
 Mandolin/dr
 Mandolin/grater/bower_components
+
+# X
+Mandolin/grater/lib/js/X
