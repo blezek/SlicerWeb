@@ -1,16 +1,14 @@
 <!DOCTYPE html>
-<html class="no-js" lang="en" >
+<html class="no-js" lang="en">
 <head>
   <meta charset="utf-8">
   <title>Grater</title>
   <link rel="stylesheet" href="css/foundation.css" />
   <link rel="stylesheet" href="css/grater.css" />
-   <!-- Use RequireJS for loading and the like -->
-  <script data-main="js/grater" src="js/require.js"></script>
- 
+
 </head>
 
-<body>
+<body ng-controller="MeshListController">
   <nav class="top-bar" data-topbar>
     <ul class="title-area">
       <li class="name">
@@ -44,6 +42,8 @@
           Controls go here
         </div>
       </li>
+      <li ng-repeat="mesh in meshCollection.models"> this is the mesh {{mesh.cid}}</li>
+
     </ul>
 
     <div id="drop_cube" data-dropdown-content class="f-dropdown content">
@@ -62,6 +62,8 @@
   <script type="text/javascript" src="js/X/xtk-deps.js"></script>
 -->
  
+   <!-- Use RequireJS for loading and the like -->
+  <script data-main="js/grater" src="js/require.js"></script>
 
   <!--  Support live reload -->
   <script>document.write('<script src="http://'
