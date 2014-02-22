@@ -28,6 +28,7 @@
 
   <div class="render" id="render">
     <ul class="grater-menu side-nav">
+      <!--
       <li>
         <a href="#" data-dropdown="drop_cube">Cube</a>
       </li>
@@ -42,7 +43,9 @@
           Controls go here
         </div>
       </li>
-      <li ng-repeat="mesh in meshCollection.models"> this is the mesh {{mesh.cid}}</li>
+    -->
+      <li ng-repeat="mesh in meshCollection.models" mesh-controls>
+      </li>
 
     </ul>
 
