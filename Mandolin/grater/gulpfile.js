@@ -64,14 +64,16 @@ gulp.task('vendor', function() {
 
   var js = [
   'bower_components/underscore/underscore.js',
-  'bower_components/angular/angular.js',
+  // 'bower_components/angular/angular.js',
   'bower_components/backbone/backbone.js',
   'lib/js/dat.gui.js',
-  'lib/js/xtk.js'  
+  'lib/js/xtk.js',
+  'bower_components/angularAMD/ngload.js',
+  'bower_components/angularAMD/angularAMD.js'
   ]
   gulp.src(js)
   // .pipe(concat('vendor.js'))
-  .pipe(uglify({outputSourceMap:true}))
+  // .pipe(uglify({outputSourceMap:true}))
   .pipe(gulp.dest('../docroot/js'))
 
   gulp.src("lib/js/X/**/*.js").pipe(gulp.dest('../docroot/js/X'))

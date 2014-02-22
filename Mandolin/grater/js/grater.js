@@ -1,10 +1,29 @@
 
- 
-  require(["jquery", 'foundation'], function(jquery) {
-     jquery(document).foundation();
-  })
+require.config({
+  deps: ['./foundation', './xtk', 'dat.gui'],
+  shim: {
+    'foundation': {
+      deps: ['jquery'],
+      exports: 'foundation'
+    },
+    'angular': {
+      exports: 'angular'
+    },
+    'angularAMD':['angular'],
+    'ngload':['angularAMD']
+  }
+})
 
-require(["model", "xtk", "dat.gui"], function(model) {
+// Fire up foundation
+require(['jquery', 'foundation'], function(jquery, foundation) {
+ jquery(document).foundation();
+
+})
+
+
+
+
+require(["model", 'angular', 'angularAMD'], function(model, angular, angularAMD) {
 // include all used X-classes here
   // this is only required when using the xtk-deps.js file
 /*
@@ -15,8 +34,23 @@ require(["model", "xtk", "dat.gui"], function(model) {
 
 
   meshCollection = new model.MeshCollection();
-  setInterval ( function() { meshCollection.fetch({remove: true}) }, 2000 );
+  // setInterval ( function() { meshCollection.fetch({remove: true}) }, 2000 );
 
+
+  console.log ( "Creating graterApp")
+  // create the angular application
+  var graterApp = angular.module ( 'graterApp', [] );
+  graterApp.controller ( 'MeshListController', function($scope, $timeout ) {
+    meshCollection.fetch({remove: true})
+    $scope.meshCollection = meshCollection;
+    (function tock() {
+      meshCollection.fetch({remove:true});
+      console.log("tock!")
+      $scope.meshCollection = meshCollection;
+      $timeout(tock,2000);
+    })();
+  })
+  angularAMD.bootstrap(graterApp)
 
   render = new X.renderer3D();
   render.container = "render"
