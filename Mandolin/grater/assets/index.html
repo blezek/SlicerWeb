@@ -8,7 +8,8 @@
 
 </head>
 
-<body ng-controller="MeshListController">
+<body>
+
   <nav class="top-bar" data-topbar>
     <ul class="title-area">
       <li class="name">
@@ -17,16 +18,24 @@
       <li class="toggle-topbar menu-icon"><a href="#">Menu</a></li>
     </ul>
 
-    <section class="top-bar-section">
+    <section class="top-bar-section" ng-controller="CameraController">
       <!-- Right Nav Section -->
       <ul class="right">
         <li><a href="#">Right Button</a></li>
+        <li class="has-dropdown">
+        <a href="#">Camera</a>
+        <ul class="dropdown">
+          <li ng-repeat="camera in cameraCollection.models" ng-click="setCamera(camera)">
+            <a ng-class="{active: camera == selectedCamera}" href="#">{{camera.get('name')}}</a>
+          </li>
+        </ul>
+      </li>
       </ul>
     </section>
   </nav>
 
 
-  <div class="render" id="render">
+  <div class="render" id="render" ng-controller="MeshListController">
     <ul class="grater-menu side-nav">
       <!--
       <li>

@@ -5,17 +5,16 @@ from bottle import static_file
 import bottle
 
 def grabObject ( node ):
-  if not node.GetHideFromEditors():
-    item = {}
-    item['class'] = node.GetClassName()
-    for method in dir ( node ):
-      if "Get" in method:
-        try:
-          value = method.replace ( "Get", "" )
-          prop = getattr ( node, method )()
-          item[value] = repr( prop )
-        except:
-          pass
+  item = {}
+  item['class'] = node.GetClassName()
+  for method in dir ( node ):
+    if "Get" in method:
+      try:
+        value = method.replace ( "Get", "" )
+        prop = getattr ( node, method )()
+        item[value] = repr( prop )
+      except:
+        pass
   return item
 
 @app.route("/nodes")
@@ -86,3 +85,16 @@ def get_data(id):
 @app.route("/rest/mesh")
 def rest_mesh():
   return list_models();
+
+
+@app.route("/rest/cameras")
+def rest_camera():
+  nodes = slicer.util.getNodes('vtkMRMLCamera*')
+  response = {}
+  items = response['cameras'] = []
+  for camera in nodes.values():
+    item = grabObject ( camera.GetCamera() )
+    item['name'] = camera.GetName()
+    items.append(item)
+  return response
+

@@ -55,6 +55,7 @@ gulp.task('vendor', function() {
   var foundation = ['bower_components/foundation/js/vendor/jquery.js',
   'bower_components/foundation/js/vendor/**/*.js',
   'bower_components/foundation/js/foundation.js',
+  'bower_components/modernizr/modernizr.js',
   'bower_components/requirejs/require.js']
   gulp.src(foundation).pipe(gulp.dest('../docroot/js'));
 

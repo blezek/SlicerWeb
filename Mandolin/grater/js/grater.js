@@ -3,7 +3,7 @@ require.config({
   deps: ['./foundation', './xtk', 'dat.gui'],
   shim: {
     'foundation': {
-      deps: ['jquery'],
+      deps: ['jquery', 'modernizr'],
       exports: 'foundation'
     },
     'angular': {
@@ -24,15 +24,6 @@ require(['jquery', 'foundation'], function(jquery, foundation) {
 
 
 require(["model", 'angular', 'angularAMD'], function(model, angular, angularAMD) {
-// include all used X-classes here
-  // this is only required when using the xtk-deps.js file
-/*
-  goog.require('X.renderer3D');
-  goog.require('X.cube');
-  goog.require('X.mesh');
-*/
-
-
   render = new X.renderer3D();
   render.container = "render"
   render.init();
@@ -51,13 +42,14 @@ require(["model", 'angular', 'angularAMD'], function(model, angular, angularAMD)
       console.log ( "processing", scope, element, attrs);
       var m = new X.mesh()
       m.file = "mrml/data/" + scope.mesh.id + ".stl"
+      m.color = scope.mesh.get('color')
       render.add ( m )
 
       var gui, meshGUI;
       gui = new dat.GUI({ autoPlace: false });
-      meshGUI = gui.addFolder ( scope.mesh.attributes.Name )
+      meshGUI = gui.addFolder ( scope.mesh.get('Name') )
       meshGUI.add( m, 'visible').listen()
-      meshGUI.add( m, 'opacity', 0, 1.0 )
+      meshGUI.add( m, 'opacity', 0, 1.0 ).listen()
       // meshGUI.open()
       element.append( gui.domElement )
     }
@@ -73,7 +65,29 @@ require(["model", 'angular', 'angularAMD'], function(model, angular, angularAMD)
       // $scope.meshCollection = meshCollection;
       $timeout(tock,2000);
     })();
+  });
+
+
+  graterApp.controller ( 'CameraController', function($scope, $timeout ) {
+    $scope.cameraCollection = new model.CameraCollection;
+    $scope.cameraCollection.fetch({remove: true})
+    $scope.activeCamera = $scope.cameraCollection.models[0]
+    $scope.render = render;
+    $scope.setCamera = function(camera) {
+      console.log("set active camera to: ", camera)
+      $scope.activeCamera = camera
+    };
+    (function cameratock() {
+      $scope.cameraCollection.fetch({remove:true});
+      console.log($scope.activeCamera)
+      if ( $scope.activeCamera ) {
+        $scope.render.camera.position = $scope.activeCamera.get('Position')
+      }
+
+      $timeout(cameratock,500);
+    })();
   })
+
   angularAMD.bootstrap(graterApp)
 
   
