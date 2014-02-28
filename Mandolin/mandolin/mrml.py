@@ -95,6 +95,10 @@ def rest_camera():
   for camera in nodes.values():
     item = grabObject ( camera.GetCamera() )
     item['name'] = camera.GetName()
+    item['position'] = camera.GetCamera().GetPosition()
+    item['view_up'] = camera.GetCamera().GetViewUp()
+    item['focal_point'] = camera.GetCamera().GetFocalPoint()
+    item['id'] = camera.GetID()
     items.append(item)
   return response
 
