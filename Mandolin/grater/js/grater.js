@@ -40,6 +40,8 @@ require(["model", 'angular', 'angularAMD'], function(model, angular, angularAMD)
   graterApp.directive("meshControls", function() {
     return function(scope, element, attrs) {
       console.log ( "processing", scope, element, attrs);
+
+
       var m = new X.mesh()
       m.file = "mrml/data/" + scope.mesh.id + ".stl"
       m.color = scope.mesh.get('color')
@@ -52,6 +54,22 @@ require(["model", 'angular', 'angularAMD'], function(model, angular, angularAMD)
       meshGUI.add( m, 'opacity', 0, 1.0 ).listen()
       // meshGUI.open()
       element.append( gui.domElement )
+
+      var setAttributes = function( m, mesh ) {
+        m.visible = mesh.get("display_visibility")
+        m.opacity = mesh.get("opacity")
+        m.color = mesh.get('color')
+      }
+      setAttributes ( m, scope.mesh )
+      // Add a call back to reset if values change
+      scope.mesh.on("change", function() {
+        setAttributes ( m, this )
+      })
+      scope.mesh.on ( 'remove', function() {
+        m.visible = false
+        render.remove ( m )
+      })
+
     }
   })
 
@@ -61,7 +79,6 @@ require(["model", 'angular', 'angularAMD'], function(model, angular, angularAMD)
     $scope.render = render;
     (function tock() {
       meshCollection.fetch({remove:true});
-      console.log("tock!")
       // $scope.meshCollection = meshCollection;
       $timeout(tock,2000);
     })();
@@ -75,13 +92,17 @@ require(["model", 'angular', 'angularAMD'], function(model, angular, angularAMD)
     $scope.render = render;
     $scope.setCamera = function(camera) {
       console.log("set active camera to: ", camera)
-      $scope.activeCamera = camera
+      $scope.activeCamera = camera.id
     };
     (function cameratock() {
       $scope.cameraCollection.fetch({remove:true});
-      console.log($scope.activeCamera)
       if ( $scope.activeCamera ) {
-        $scope.render.camera.position = $scope.activeCamera.get('Position')
+        camera = $scope.cameraCollection.get($scope.activeCamera)
+        // camera = $scope.activeCamera
+        $scope.render.camera.position = camera.get('position')
+        $scope.render.camera.up = camera.get('view_up')
+        $scope.render.camera.focus = camera.get('focal_point')
+
       }
 
       $timeout(cameratock,500);
