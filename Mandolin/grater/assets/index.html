@@ -21,7 +21,6 @@
     <section class="top-bar-section" ng-controller="CameraController">
       <!-- Right Nav Section -->
       <ul class="right">
-        <li><a href="#">Right Button</a></li>
         <li class="has-dropdown">
         <a href="#">Camera</a>
         <ul class="dropdown">
@@ -37,42 +36,12 @@
 
   <div class="render" id="render" ng-controller="MeshListController">
     <ul class="grater-menu side-nav">
-      <!--
-      <li>
-        <a href="#" data-dropdown="drop_cube">Cube</a>
-      </li>
-      <li>
-        <a href="#" data-dropdown="drop_wm">hemispheric_white_matter.vtk</a>
-      </li>
-      <li>
-        <a href="#" data-dropdown="drop_sb">skull_bone.vtk</a>
-      </li>
-      <li>
-        <div id="test_div">
-          Controls go here
-        </div>
-      </li>
-    -->
+      <!-- Install the mesh controls, using teh mesh-controls directive -->
       <li ng-repeat="mesh in meshCollection.models" mesh-controls>
       </li>
 
     </ul>
-
-    <div id="drop_cube" data-dropdown-content class="f-dropdown content">
-    </div>
-    <div id="drop_wm" data-dropdown-content class="f-dropdown content">
-    </div>
-    <div id="drop_sb" data-dropdown-content class="f-dropdown content">
-    </div>
-
   </div>
-
-
-
-<!--
-  <script type="text/javascript" src="js/X/lib/google-closure-library/closure/goog/base.js"></script>
-  <script type="text/javascript" src="js/X/xtk-deps.js"></script>
--->
  
    <!-- Use RequireJS for loading and the like -->
   <script data-main="js/grater" src="js/require.js"></script>
@@ -82,8 +51,5 @@
     + (location.host || 'localhost').split(':')[0]
     + ':35729/livereload.js?snipver=1"></'
     + 'script>')</script>
-
-  <script>
-  </script>
 </body>
 </html>

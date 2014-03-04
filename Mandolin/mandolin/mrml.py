@@ -36,27 +36,20 @@ def mrml():
   final = { 'nodes':response}
   return final
 
+
+
 @app.route("/mrml/models")
 def list_models():
-  representation = ["POINTS", "LINES", "TRIANGLES" ]
   response = {}
   items = response['mesh'] = []
   count = slicer.mrmlScene.GetNumberOfNodesByClass("vtkMRMLModelNode")
   for i in xrange(count):
     n = slicer.mrmlScene.GetNthNodeByClass ( i, "vtkMRMLModelNode" )
-    if n.GetHideFromEditors():
-      continue
-    item = grabObject ( n )
-    item['name'] = n.GetName()
-    item['display_visibility'] = n.GetDisplayVisibility()
-    item['display_node_id'] = n.GetDisplayNodeID()
-    item['id'] = n.GetID()
-    item['color'] = n.GetDisplayNode().GetColor()
-    item['opacity'] = n.GetDisplayNode().GetOpacity()
-    item['pointsize'] = n.GetDisplayNode().GetPointSize()
-    item['type'] = representation[n.GetDisplayNode().GetRepresentation()]
-    items.append ( item )
+    item = get_model(n.GetID())
+    if item:
+      items.append ( item )
   return response
+
 
 @app.route("/mrml/data/<id>")
 def get_data(id):
@@ -85,6 +78,46 @@ def get_data(id):
 @app.route("/rest/mesh")
 def rest_mesh():
   return list_models();
+
+def get_model(id):
+  n = slicer.mrmlScene.GetNodeByID(id)
+  if not n:
+    return None
+  if n.GetHideFromEditors():
+    return None
+  representation = ["POINTS", "LINES", "TRIANGLES" ]
+  item = grabObject ( n )
+  item['name'] = n.GetName()
+  item['display_visibility'] = n.GetDisplayVisibility()
+  item['display_node_id'] = n.GetDisplayNodeID()
+  item['id'] = n.GetID()
+  item['color'] = n.GetDisplayNode().GetColor()
+  item['opacity'] = n.GetDisplayNode().GetOpacity()
+  item['pointsize'] = n.GetDisplayNode().GetPointSize()
+  item['type'] = representation[n.GetDisplayNode().GetRepresentation()]
+  return item
+
+@app.route("/rest/mesh/<id>")
+def get_model_route(id):
+  n = get_model(id)
+  if n == None:
+    bottle.response.status = "404 Node: " + id + " was not found"
+    return bottle.response
+  return n
+
+
+@app.put("/rest/mesh/<id>")
+def update_model(id):
+  print "Update model {} with data {}".format ( id, bottle.request.json )
+  node = slicer.mrmlScene.GetNodeByID(id)
+  if not node:
+    bottle.response.status = "404 Node: " + id + " was not found"
+    return bottle.response
+  print "Update_model"
+  json = bottl.request.json
+  node.GetDisplayNode().SetColor ( json['color'] )
+  node.SetDisplayVisibility( json['visibility'] )
+  node.GetDisplayNode().SetOpacity ( json['opacity'] )
 
 
 @app.route("/rest/cameras")
