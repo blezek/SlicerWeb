@@ -10,6 +10,7 @@ from ws4py.manager import WebSocketManager
 
 import logging
 logger = logging.getLogger('SlicerHTTPServer')
+logger.setLevel(logging.DEBUG)
 
 class QuietHandler(WSGIRequestHandler):
   def log_request(*args, **kw):
@@ -90,12 +91,13 @@ class SlicerHTTPServer(WSGIServer):
     Call this from your WSGI handler when a websocket
     has been created.
     """
-    logger.debug("Added link to a new websocket {} with fileno {}".format(ws, ws.connection()))
+    logger.debug("Added link to a new websocket {} with fileno {}".format(ws, ws.connection.fileno()))
+    print"Added link to a new websocket {} with fileno {}".format(ws, ws.connection.fileno())
     # self.manager.add(ws)
-    self.websockets[ws.connection().fileno()] = ws
-    notifier = qt.QSocketNotifier(ws.connection().fileno(),qt.QSocketNotifier.Read)
-    self.notifiers[ws.connection().fileno()] = notifier
-    notifier.connect('activated(int)', self.handler_class)
+    self.websockets[ws.connection.fileno()] = ws
+    notifier = qt.QSocketNotifier(ws.connection.fileno(),qt.QSocketNotifier.Read)
+    self.notifiers[ws.connection.fileno()] = notifier
+    notifier.connect('activated(int)', self.handle_ws_notify)
 
   def server_close(self):
     """
