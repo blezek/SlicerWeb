@@ -6,6 +6,10 @@ from  wsgiref.simple_server import WSGIServer
 from  wsgiref.simple_server import WSGIRequestHandler
 
 
+class QuietHandler(WSGIRequestHandler):
+  def log_request(*args, **kw):
+    pass
+
 #
 # SlicerHTTPServer
 #
@@ -17,13 +21,14 @@ class SlicerHTTPServer(WSGIServer):
   """
   # TODO: set header so client knows that image refreshes are needed (avoid
   # using the &time=xxx trick)
-  def __init__(self, server_address=("",8070), RequestHandlerClass=WSGIRequestHandler, docroot='.', logFile=None,logMessage=None):
+  def __init__(self, server_address=("",8070), RequestHandlerClass=QuietHandler, docroot='.', logFile=None,logMessage=None):
     HTTPServer.__init__(self,server_address, RequestHandlerClass)
     self.docroot = docroot
     self.logFile = logFile
     if logMessage:
       self.logMessage = logMessage
     self.logMessage ( "Starting Mandolin SlicerHTTPServer" )
+
 
   def onSocketNotify(self,fileno):
       # based on SocketServer.py: self.serve_forever()

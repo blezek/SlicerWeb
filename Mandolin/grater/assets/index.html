@@ -1,16 +1,15 @@
 <!DOCTYPE html>
-<html class="no-js" lang="en" >
+<html class="no-js" lang="en">
 <head>
   <meta charset="utf-8">
   <title>Grater</title>
   <link rel="stylesheet" href="css/foundation.css" />
   <link rel="stylesheet" href="css/grater.css" />
-   <!-- Use RequireJS for loading and the like -->
-  <script data-main="js/grater" src="js/require.js"></script>
- 
+
 </head>
 
 <body>
+
   <nav class="top-bar" data-topbar>
     <ul class="title-area">
       <li class="name">
@@ -19,57 +18,40 @@
       <li class="toggle-topbar menu-icon"><a href="#">Menu</a></li>
     </ul>
 
-    <section class="top-bar-section">
+    <section class="top-bar-section" ng-controller="CameraController">
       <!-- Right Nav Section -->
       <ul class="right">
-        <li><a href="#">Right Button</a></li>
+        <li><a href="#" class="button" onclick="TogetherJS(this); return false;">Collaborate</a></li>
+        <li class="has-dropdown">
+        <a href="#">Camera</a>
+        <ul class="dropdown">
+          <li ng-repeat="camera in cameraCollection.models" ng-click="setCamera(camera)">
+            <a ng-class="{active: camera == selectedCamera}" href="#">{{camera.get('name')}}</a>
+          </li>
+        </ul>
+      </li>
       </ul>
     </section>
   </nav>
 
 
-  <div class="render" id="render">
+  <div class="render" id="render" ng-controller="MeshListController">
     <ul class="grater-menu side-nav">
-      <li>
-        <a href="#" data-dropdown="drop_cube">Cube</a>
+      <!-- Install the mesh controls, using teh mesh-controls directive -->
+      <li ng-repeat="mesh in meshCollection.models" mesh-controls>
       </li>
-      <li>
-        <a href="#" data-dropdown="drop_wm">hemispheric_white_matter.vtk</a>
-      </li>
-      <li>
-        <a href="#" data-dropdown="drop_sb">skull_bone.vtk</a>
-      </li>
-      <li>
-        <div id="test_div">
-          Controls go here
-        </div>
-      </li>
+
     </ul>
-
-    <div id="drop_cube" data-dropdown-content class="f-dropdown content">
-    </div>
-    <div id="drop_wm" data-dropdown-content class="f-dropdown content">
-    </div>
-    <div id="drop_sb" data-dropdown-content class="f-dropdown content">
-    </div>
-
   </div>
-
-
-
-<!--
-  <script type="text/javascript" src="js/X/lib/google-closure-library/closure/goog/base.js"></script>
-  <script type="text/javascript" src="js/X/xtk-deps.js"></script>
--->
  
+   <!-- Use RequireJS for loading and the like -->
+  <script data-main="js/grater" src="js/require.js"></script>
+  <script src="https://togetherjs.com/togetherjs.js"></script>
 
   <!--  Support live reload -->
   <script>document.write('<script src="http://'
     + (location.host || 'localhost').split(':')[0]
     + ':35729/livereload.js?snipver=1"></'
     + 'script>')</script>
-
-  <script>
-  </script>
 </body>
 </html>

@@ -1,88 +1,141 @@
 
- 
-  require(["jquery", 'foundation'], function(jquery) {
-     jquery(document).foundation();
-  })
 
-require(["model", "xtk", "dat.gui"], function(model) {
-// include all used X-classes here
-  // this is only required when using the xtk-deps.js file
-/*
-  goog.require('X.renderer3D');
-  goog.require('X.cube');
-  goog.require('X.mesh');
-*/
+// Configuration for require.js
+// foundation, xtk and dat.gui are loaded by default
+require.config({
+  deps: ['./foundation', './xtk', 'dat.gui'],
+
+  // Some packages do not provide require info, so we 'shim' them here
+  shim: {
+    'foundation': {
+      deps: ['jquery', 'modernizr'],
+      exports: 'foundation'
+    },
+    'angular': {
+      exports: 'angular'
+    },
+    // The angularAMD and ngload let us load a page and add angular apps later
+    'angularAMD':['angular'],
+    'ngload':['angularAMD']
+  }
+})
+
+// Fire up foundation on document load
+require(['jquery', 'foundation'], function(jquery, foundation) {
+ jquery(document).foundation();
+
+})
 
 
-  meshCollection = new model.MeshCollection();
-  setInterval ( function() { meshCollection.fetch({remove: true}) }, 2000 );
-
-
+// For Grater to work, the model, angular and angularAMD packages are required
+require(["model", 'angular', 'angularAMD'], function(model, angular, angularAMD) {
+  // Intentionally expose render and meshCollection as global variables
   render = new X.renderer3D();
   render.container = "render"
   render.init();
 
-  // create a cube
-  var cube = new X.cube();
-  
-  // setting the edge length can also be skipped since 20 is the default
-  cube.lengthX = cube.lengthY = cube.lengthZ = 20;
-  cube.lengthX = 40;
-  
-  // can also be skipped since [0,0,0] is the default center
-  // cube.center = [0, 0, 0];
-  
-  // [1,1,1] (== white) is also the default so this can be skipped aswell
-  cube.color = [1, 1, 1];
-  
-  render.add(cube); // add the cube to the renderer
+  meshCollection = new model.MeshCollection();
 
+  console.log ( "Creating graterApp")
 
-  // Add the skull
-  var skull = new X.mesh()
-  skull.file = "mrml/data/vtkMRMLModelNode13.stl"
-  skull.opacity = 0.7;
-  render.add(skull)
+  // create the angular application
+  var graterApp = angular.module ( 'graterApp', [] );
 
-  var wm = new X.mesh()
-  wm.file = "mrml/data/vtkMRMLModelNode4.stl"
-  render.add(wm)
-
-  render.onShowtime = function() {
-    // Add a GUI
-    var gui, meshGUI;
-    gui = new dat.GUI({ autoPlace: false });
-    var cubeGUI = gui.addFolder ( "Cube")
-    cubeGUI.add(cube, 'visible')
-    var lengthGUI = cubeGUI.add( cube, 'lengthX', 1, 100 ).listen()
-    cubeGUI.open()
-    // $("#drop2").append(gui.domElement)
-    var container = document.getElementById('drop_cube')
-    container.appendChild(gui.domElement)
-
-    gui = new dat.GUI({autoPlace: false});
-    meshGUI = gui.addFolder ( "Mesh" )
-    meshGUI.add( skull, 'visible').listen()
-    meshGUI.add( skull, 'opacity', 0, 1.0 )
-    meshGUI.open()
-    document.getElementById('drop_sb').appendChild ( gui.domElement )
-
-    gui = new dat.GUI({autoPlace: false});
-    meshGUI = gui.addFolder ( "Mesh" )
-    meshGUI.add( wm, 'visible').listen()
-    meshGUI.add( wm, 'opacity', 0, 1.0 )
-    meshGUI.open()
-    document.getElementById('drop_wm').appendChild ( gui.domElement )
-
-    gui = new dat.GUI({autoPlace: false});
-    meshGUI = gui.addFolder("mesh")
-    meshGUI.add(wm, 'visible').listen()
-    meshGUI.open()
-    document.getElementById("test_div").appendChild(gui.domElement)
-
+  // A mesh's attributes from the Backbone model
+  var setAttributes = function( m, mesh ) {
+    m.visible = mesh.get("display_visibility")
+    m.opacity = mesh.get("opacity")
+    m.color = mesh.get('color')
   }
 
+
+  // This is a custom directive to create our GUI as needed
+  graterApp.directive("meshControls", function() {
+    return function(scope, element, attrs) {
+
+      var m = new X.mesh()
+      m.file = "mrml/data/" + scope.mesh.id + ".stl"
+      m.color = scope.mesh.get('color')
+      render.add ( m )
+
+      var gui, meshGUI;
+      gui = new dat.GUI({ autoPlace: false });
+      meshGUI = gui.addFolder ( scope.mesh.get('Name') )
+      meshGUI.add( m, 'visible').listen()
+      meshGUI.add( m, 'opacity', 0, 1.0 ).listen()
+      element.append( gui.domElement )
+
+      // Set the initial values
+      setAttributes ( m, scope.mesh );
+
+      // Sync the Backbone model to the XTK mesh object
+      scope.mesh.on("change", function() {
+        setAttributes ( m, this )
+      })
+
+      scope.mesh.on("request", function() {
+        console.log ( "Beggining Request")
+      })
+
+      // Remove the mesh object from the renderer when it goes away in the collection
+      scope.mesh.on ( 'remove', function() {
+        m.visible = false
+        render.remove ( m )
+      })
+
+    }
+  })
+
+  graterApp.controller ( 'MeshListController', function($scope, $timeout ) {
+
+    // Grab the initial set of mesh objects.  When the collection changes,
+    // Angular automagically adds the new objects into our list.
+    // The meshControls directive handles updates and item deletion.
+    meshCollection.fetch({remove: true})
+    $scope.meshCollection = meshCollection;
+    $scope.render = render;
+    // Fetch the collection every 2 seconds
+    (function tock() {
+      meshCollection.fetch({remove:true});
+      $timeout(tock,2000);
+    })();
+  });
+
+
+  // An angular controller for the camera
+  graterApp.controller ( 'CameraController', function($scope, $timeout ) {
+    $scope.cameraCollection = new model.CameraCollection;
+    // Fetch the camera list from Slicer and set the active to the first one.
+    $scope.activeCamera = null
+    $scope.cameraCollection.fetch({remove: true,
+      success: function() {
+        $scope.activeCamera = $scope.cameraCollection.models[0]        
+      }
+    })
+    $scope.render = render;
+    $scope.setCamera = function(camera) {
+      $scope.activeCamera = camera.id
+    };
+
+    // Every 500ms, update the cameras
+    (function cameratock() {
+      $scope.cameraCollection.fetch({remove:true});
+      if ( $scope.activeCamera ) {
+        camera = $scope.cameraCollection.get($scope.activeCamera)
+        // camera = $scope.activeCamera
+        $scope.render.camera.position = camera.get('position')
+        $scope.render.camera.up = camera.get('view_up')
+        $scope.render.camera.focus = camera.get('focal_point')
+      }
+      $timeout(cameratock,500);
+    })();
+  })
+
+  // Here is where the fun happens.  angularAMD contains support for initializing an angular
+  // app after the page load.
+  angularAMD.bootstrap(graterApp)
+
+  // Tell XTK to start rendering.
   render.render();
 
-cube.lengthX = 100;
 })
