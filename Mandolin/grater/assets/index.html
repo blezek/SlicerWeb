@@ -21,6 +21,7 @@
     <section class="top-bar-section" ng-controller="CameraController">
       <!-- Right Nav Section -->
       <ul class="right">
+        <li><a href="#" class="button" onclick="TogetherJS(this); return false;">Collaborate</a></li>
         <li class="has-dropdown">
         <a href="#">Camera</a>
         <ul class="dropdown">
@@ -45,6 +46,7 @@
  
    <!-- Use RequireJS for loading and the like -->
   <script data-main="js/grater" src="js/require.js"></script>
+  <script src="https://togetherjs.com/togetherjs.js"></script>
 
   <!--  Support live reload -->
   <script>document.write('<script src="http://'
