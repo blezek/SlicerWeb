@@ -17,7 +17,24 @@ import socket
 from BaseHTTPServer import BaseHTTPRequestHandler, HTTPServer
 from SimpleHTTPServer import SimpleHTTPRequestHandler
 
+
+
+import logging, sys
+
+root = logging.getLogger()
+root.setLevel(logging.DEBUG)
+ch = logging.StreamHandler(sys.stdout)
+ch.setLevel(logging.DEBUG)
+formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+ch.setFormatter(formatter)
+root.addHandler(ch)
+
+logging.getLogger('ws4py').setLevel(logging.DEBUG)
+
+
 from mandolin.SlicerREST import SlicerREST
+
+rest = None
 
 import numpy
 
@@ -52,6 +69,8 @@ class MandolinLogic:
     self.docroot = moduleDirectory + "/docroot"
     self.port = 8090 # SlicerREST.findFreePort(self.port)
     self.server = SlicerREST(docroot=self.docroot,server_address=("",self.port),logFile=self.logFile,logMessage=self.logMessage)
+    global rest
+    rest = self.server
     self.logMessage("Configured mandolin server on port %d" % self.port)
 
 

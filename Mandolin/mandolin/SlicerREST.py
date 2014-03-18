@@ -7,27 +7,42 @@ from ws4py.websocket import WebSocket
 from ws4py.server.wsgirefserver import WSGIServer, WebSocketWSGIRequestHandler
 from ws4py.server.wsgiutils import WebSocketWSGIApplication
 
-import logging, sys
-
-root = logging.getLogger()
-
-ch = logging.StreamHandler(sys.stdout)
-ch.setLevel(logging.DEBUG)
-formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-ch.setFormatter(formatter)
-root.addHandler(ch)
-
-logger = logging.getLogger('ws4py')
+import logging
+logger = logging.getLogger('mandolin.ws')
 logger.setLevel(logging.DEBUG)
-logger.debug("Hi from ws4py")
 
 class EchoWebSocket(WebSocket):
+  def __init__(self, sock, protocols=None, extensions=None, environ=None, heartbeat_freq=None):
+    logger.debug("Initialized EchoWebSocket with socket: {}".format(sock))
+    WebSocket.__init__(self,sock,protocols=protocols,extensions=extensions, environ=environ, heartbeat_freq=heartbeat_freq)
+
+  def once(self):
+    logger.debug("Starting once")
+    if self.terminated:
+      logger.debug("WebSocket is already terminated")
+      return False
+    try:
+      logger.debug("Reading data buffer from fileno: {}".format(self.sock.fileno()))
+      b, foo = self.sock.recvfrom(self.reading_buffer_size)
+    except socket.error:
+      logger.exception("Failed to receive data")
+      return False
+    else:
+      logger.debug("Processing data: {} length: {}".format(b,len(b)))
+      if not self.process(b):
+        logger.error("Processing failed")
+        return False
+    logger.debug("Returning true")
+    return True
+
+  def opened(self):
+    logger.info("Opened web socket {}".format(self.local_address))
   def received_message(self, message):
     """
     Automatically sends back the provided ``message`` to
     its originating endpoint.
     """
-    print("EchoWebSocket.received_message {}".format(message))
+    logger.debug("EchoWebSocket.received_message {}".format(message))
     self.send(message.data, message.is_binary)
 
 #

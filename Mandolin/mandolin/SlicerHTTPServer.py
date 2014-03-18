@@ -5,12 +5,14 @@ from SimpleHTTPServer import SimpleHTTPRequestHandler
 from  wsgiref.simple_server import WSGIServer
 from  wsgiref.simple_server import WSGIRequestHandler
 from ws4py.manager import WebSocketManager
+from ws4py import format_addresses
 
 
 
 import logging
 logger = logging.getLogger('SlicerHTTPServer')
 logger.setLevel(logging.DEBUG)
+
 
 class QuietHandler(WSGIRequestHandler):
   def log_request(*args, **kw):
@@ -83,8 +85,16 @@ class SlicerHTTPServer(WSGIServer):
 
   def handle_ws_notify(self,fileno):
     logger.debug("notified on {}".format(fileno))
-    ws = self.websockets[fileno]
-    ws.once();
+    ws = self.websockets.get(fileno)
+    if ws and not ws.terminated:
+      if not ws.once():
+        logger.info("Terminating {} terminated? {}".format(ws,ws.terminated))
+        self.websockets.pop(fileno,None)
+        if not ws.terminated:
+          ws.terminate();
+          self.notifiers.get(fileno).disconnect("activated(int)", self.handle_ws_notify)
+          self.notifiers.pop(fileno,None)
+          logger.info("Terminating websocket {}".format(ws))
 
   def link_websocket_to_server(self, ws):
     """
@@ -92,12 +102,13 @@ class SlicerHTTPServer(WSGIServer):
     has been created.
     """
     logger.debug("Added link to a new websocket {} with fileno {}".format(ws, ws.connection.fileno()))
-    print"Added link to a new websocket {} with fileno {}".format(ws, ws.connection.fileno())
+    print "Added link to a new websocket {} with fileno {}".format(ws, ws.connection.fileno())
     # self.manager.add(ws)
     self.websockets[ws.connection.fileno()] = ws
     notifier = qt.QSocketNotifier(ws.connection.fileno(),qt.QSocketNotifier.Read)
     self.notifiers[ws.connection.fileno()] = notifier
     notifier.connect('activated(int)', self.handle_ws_notify)
+    ws.opened()
 
   def server_close(self):
     """
@@ -109,7 +120,7 @@ class SlicerHTTPServer(WSGIServer):
       self.manager.stop()
       self.manager.join()
       delattr(self, 'manager')
-    slWSGIServer.server_close(self)
+    WSGIServer.server_close(self)
 
 
   @classmethod
