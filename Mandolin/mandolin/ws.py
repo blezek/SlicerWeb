@@ -1,9 +1,5 @@
 """
 import mandolin.ws
-ss = None
-if ss:
-  ss.close()
-
 reload(mandolin.ws); ss = mandolin.ws.WServer()
 """
 
@@ -15,57 +11,50 @@ from collections import deque
 from __main__ import qt
 
 import sys
+import base64
+from hashlib import sha1
+WS_KEY = b"258EAFA5-E914-47DA-95CA-C5AB0DC85B11"
+
 
 handshake = '\
 HTTP/1.1 101 Web Socket Protocol Handshake\r\n\
 Upgrade: WebSocket\r\n\
 Connection: Upgrade\r\n\
+Sec-WebSocket-Version: 13\r\n\
 WebSocket-Origin: http://localhost:8888\r\n\
-WebSocket-Location: ws://localhost:9999/\r\n\r\n\
+WebSocket-Location: ws://localhost:9999/\r\n\
 '
 
 
 class WServer:
   def __init__(self):
     import socket
-    self.sock = sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    sock.bind(("", 9999))
-    sock.listen(5)
-    logger.debug("Binding socket {}".format(sock.fileno()))
-    self.notifier = qt.QSocketNotifier(self.sock.fileno(),qt.QSocketNotifier.Read)
-    self.notifier.connect('activated(int)', self.handleConnect, type=qt.Qt.BlockingQueuedConnection )
-    self.notifier.setEnabled(True)
-    self.write_buffer = deque()
+    # self.sock = sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    self.server = qt.QTcpServer()
+    self.server.listen(qt.QHostAddress("0.0.0.0"),9999)
+    self.server.connect('newConnection()', self.handleConnect)
 
-  def handleConnect(self,fd):
+  def handleConnect(self):
     logger.debug("Got connection")
-    client, address = self.sock.accept();
-    logger.debug("Got connection from {}".format(address))
-    self.ws = WS(client,address)
+    socket = self.server.nextPendingConnection()
+    logger.debug("Got connection from {}".format(socket.peerName()))
+    self.ws = WS(socket)
 
   def close(self):
     self.ws.close();
-    self.notifier.disconnect("activated(int)", self.handleConnect)
-    self.sock.close()
+    self.server.close()
  
 class WS:
-  def __init__(self, client, address):
+  def __init__(self, socket):
     self.handshaken = False 
     self.data = ''
     self.header = ''
-    self.sock = client
-    self.address = address
+    self.sock = socket
     self.send_buffer = deque()
-    self.rnotifier = qt.QSocketNotifier(self.sock.fileno(),qt.QSocketNotifier.Read)
-    self.rnotifier.connect('activated(int)', self.handleRead)
-    self.wnotifier = qt.QSocketNotifier(self.sock.fileno(),qt.QSocketNotifier.Write)
-    self.wnotifier.connect('activated(int)', self.handleWrite)
+    self.sock.connect('readyRead()', self.handleRead)
+
  
   def close(self):
-    self.rnotifier.disconnect("activated(int)", self.handleRead)
-    self.wnotifier.disconnect("activated(int)", self.handleWrite)
-    self.rnotifier = None
-    self.wnotifier = None
     self.sock.close();
 
   def handleWrite(self,fd):
@@ -73,22 +62,30 @@ class WS:
     while len(self.send_buffer):
       self.sock.sendall(self.send_buffer.popleft())
 
-  def handleRead(self,fd):
-    tmp = self.sock.recv(128)
-    logger.info("handleRead read {} bytes".format(len(tmp)))
-    if len(tmp) == 0:
+  def handleRead(self):
+    tmp = self.sock.read(1024)
+    logger.info("handleRead read {} bytes".format(tmp.size()))
+    if tmp.size() == 0:
       logger.debug("Got zero bytes, closing")
       self.close()
       return
 
+    tmp = str(tmp)
     if self.handshaken == False:
-      logger.debug ( "Looking for handshake")
       self.header += tmp
+      logger.debug ( "Looking for handshake\nheader: {}".format(self.header))
       if self.header.find('\r\n\r\n') != -1:
         self.data = self.header.split('\r\n\r\n', 1)[1]
+        h = self.header.split('\r\n\r\n', 1)[0]
+        s = h.split("\r\n")
+        self.headers = dict(item.split(": ") for item in s[1:])
         self.handshaken = True
-        self.send_buffer.append(handshake)
-        logger.debug("Got handshake")
+        key = self.headers.get('Sec-WebSocket-Key')
+        if key:
+          ws_key = base64.b64decode(key.encode('utf-8'))
+        secret = base64.b64encode(sha1(key.encode('utf-8') + WS_KEY).digest())
+        self.sock.write(handshake + 'Sec-WebSocket-Accept: ' + secret + '\r\n\r\n')
+        logger.debug("Got handshake \nheaders: {}".format(self.headers))
     else:
       self.data += tmp;
       validated = []
@@ -101,6 +98,7 @@ class WS:
       for v in validated:
         logger.debug("Got message: {}".format(v))
         self.send_buffer.append('\x00' + v + '\xff')
+        self.sock.write('\x00' + v + '\xff')
 
 
 # while True:
