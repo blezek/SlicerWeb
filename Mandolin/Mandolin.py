@@ -14,9 +14,6 @@ except ImportError:
 import string,time
 import socket
 
-from BaseHTTPServer import BaseHTTPRequestHandler, HTTPServer
-from SimpleHTTPServer import SimpleHTTPRequestHandler
-
 
 
 import logging, sys
@@ -31,6 +28,9 @@ root.addHandler(ch)
 
 logging.getLogger('ws4py').setLevel(logging.DEBUG)
 
+
+from BaseHTTPServer import BaseHTTPRequestHandler, HTTPServer
+from SimpleHTTPServer import SimpleHTTPRequestHandler
 
 from mandolin.SlicerREST import SlicerREST
 

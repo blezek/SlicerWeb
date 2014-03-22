@@ -84,6 +84,7 @@ class SlicerHTTPServer(WSGIServer):
     print ("Initialized websockets manager")
 
   def handle_ws_notify(self,fileno):
+    self.netifiers.get(fileno).isEnabled(False)
     logger.debug("notified on {}".format(fileno))
     ws = self.websockets.get(fileno)
     if ws and not ws.terminated:
@@ -95,6 +96,7 @@ class SlicerHTTPServer(WSGIServer):
           self.notifiers.get(fileno).disconnect("activated(int)", self.handle_ws_notify)
           self.notifiers.pop(fileno,None)
           logger.info("Terminating websocket {}".format(ws))
+    self.notifiers.get(fileno).isEnabled(True)
 
   def link_websocket_to_server(self, ws):
     """

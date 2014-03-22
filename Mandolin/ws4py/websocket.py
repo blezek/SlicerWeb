@@ -14,6 +14,8 @@ from ws4py.compat import basestring, unicode
 DEFAULT_READING_SIZE = 2
 
 logger = logging.getLogger('ws4py')
+logger.setLevel(logging.DEBUG)
+
 
 __all__ = ['WebSocket', 'EchoWebSocket', 'Heartbeat']
 

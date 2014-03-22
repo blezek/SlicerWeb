@@ -11,10 +11,19 @@ import logging
 logger = logging.getLogger('mandolin.ws')
 logger.setLevel(logging.DEBUG)
 
+from collections import deque
+from __main__ import qt
+
+
 class EchoWebSocket(WebSocket):
   def __init__(self, sock, protocols=None, extensions=None, environ=None, heartbeat_freq=None):
     logger.debug("Initialized EchoWebSocket with socket: {}".format(sock))
     WebSocket.__init__(self,sock,protocols=protocols,extensions=extensions, environ=environ, heartbeat_freq=heartbeat_freq)
+    self.sock.setblocking(False)
+    self.notifier = qt.QSocketNotifier(self.sock.fileno(),qt.QSocketNotifier.Write)
+    self.notifier.connect('activated(int)', self.handleWrite)
+    self.write_buffer = deque()
+
 
   def once(self):
     logger.debug("Starting once")
@@ -24,6 +33,9 @@ class EchoWebSocket(WebSocket):
     try:
       logger.debug("Reading data buffer from fileno: {}".format(self.sock.fileno()))
       b, foo = self.sock.recvfrom(self.reading_buffer_size)
+      logger.debug("Read {}".format(b))
+      if b == None:
+        logger.debug ("b was None")
     except socket.error:
       logger.exception("Failed to receive data")
       return False
@@ -37,6 +49,7 @@ class EchoWebSocket(WebSocket):
 
   def opened(self):
     logger.info("Opened web socket {}".format(self.local_address))
+
   def received_message(self, message):
     """
     Automatically sends back the provided ``message`` to
@@ -44,6 +57,25 @@ class EchoWebSocket(WebSocket):
     """
     logger.debug("EchoWebSocket.received_message {}".format(message))
     self.send(message.data, message.is_binary)
+
+  def handleWrite(self,fd):
+    logger.debug("Writing {} items".format(len(self.write_buffer)))
+    while len(self.write_buffer):
+      self.sock.sendall(self.write_buffer.popleft())
+
+
+  def _write(self, b):
+    """
+    Trying to prevent a write operation
+    on an already closed websocket stream.
+
+    This cannot be bullet proof but hopefully
+    will catch almost all use cases.
+    """
+    if self.terminated or self.sock is None:
+      raise RuntimeError("Cannot send on a terminated websocket")
+    self.write_buffer.append(b)
+
 
 #
 # SlicerHTTPServer

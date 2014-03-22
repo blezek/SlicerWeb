@@ -57,6 +57,7 @@ from ws4py.compat import unicode, py3k
 from ws4py import WS_VERSION, WS_KEY, format_addresses
 
 logger = logging.getLogger('ws4py')
+logger.setLevel(logging.DEBUG)
 
 __all__ = ['WebSocketWSGIApplication']
 
