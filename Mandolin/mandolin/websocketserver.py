@@ -1,7 +1,7 @@
 
 import logging
 logger = logging.getLogger('slicer.websocket.server')
-logger.setLevel(logging.INFO)
+logger.setLevel(logging.ERROR)
 
 from collections import deque
 from __main__ import qt
