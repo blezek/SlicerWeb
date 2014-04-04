@@ -44,9 +44,11 @@ gulp.task('lr-server', function() {
   });
 });
 
-gulp.task('default', ['lr-server', 'vendor', 'build'], function() {
+gulp.task('default', ['watch']);{}
+gulp.task('watch', ['lr-server', 'vendor', 'build'], function() {
   gulp.watch(all, ['build']);
 })
+
 
 
 gulp.task('vendor', function() {
