@@ -30,7 +30,7 @@ class SlicerHTTPServer(WSGIServer):
   # TODO: set header so client knows that image refreshes are needed (avoid
   # using the &time=xxx trick)
   def __init__(self, server_address=("",8070), handler_class=QuietHandler, docroot='.', logFile=None,logMessage=None):
-    HTTPServer.__init__(self,server_address, handler_class)
+    WSGIServer.__init__(self,server_address, handler_class)
     self.docroot = docroot
     self.logFile = logFile
     if logMessage:
@@ -98,6 +98,10 @@ class SlicerHTTPServer(WSGIServer):
           logger.info("Terminating websocket {}".format(ws))
     self.notifiers.get(fileno).isEnabled(True)
 
+  def wsTerminated(self,ws):
+    """One of the managed WebSockets was terminated, remove it from our list"""
+    self.websockets.pop(ws.sock.fileno(), None)
+
   def link_websocket_to_server(self, ws):
     """
     Call this from your WSGI handler when a websocket
@@ -107,10 +111,10 @@ class SlicerHTTPServer(WSGIServer):
     print "Added link to a new websocket {} with fileno {}".format(ws, ws.connection.fileno())
     # self.manager.add(ws)
     self.websockets[ws.connection.fileno()] = ws
-    notifier = qt.QSocketNotifier(ws.connection.fileno(),qt.QSocketNotifier.Read)
-    self.notifiers[ws.connection.fileno()] = notifier
-    notifier.connect('activated(int)', self.handle_ws_notify)
-    ws.opened()
+    # notifier = qt.QSocketNotifier(ws.connection.fileno(),qt.QSocketNotifier.Read)
+    # self.notifiers[ws.connection.fileno()] = notifier
+    # notifier.connect('activated(int)', self.handle_ws_notify)
+    ws.opened(self)
 
   def server_close(self):
     """
