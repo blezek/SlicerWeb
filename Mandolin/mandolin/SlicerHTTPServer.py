@@ -70,64 +70,8 @@ class SlicerHTTPServer(WSGIServer):
       fp.write(message + '\n')
       fp.close()
 
-
-  def initialize_websockets_manager(self):
-    """
-    Call thos to start the underlying websockets
-    manager. Make sure to call it once your server
-    is created.
-    """
-    # self.manager = WebSocketManager()
-    # self.manager.start()
-    self.notifiers = {}
-    self.websockets = {}
-    print ("Initialized websockets manager")
-
-  def handle_ws_notify(self,fileno):
-    self.netifiers.get(fileno).isEnabled(False)
-    logger.debug("notified on {}".format(fileno))
-    ws = self.websockets.get(fileno)
-    if ws and not ws.terminated:
-      if not ws.once():
-        logger.info("Terminating {} terminated? {}".format(ws,ws.terminated))
-        self.websockets.pop(fileno,None)
-        if not ws.terminated:
-          ws.terminate();
-          self.notifiers.get(fileno).disconnect("activated(int)", self.handle_ws_notify)
-          self.notifiers.pop(fileno,None)
-          logger.info("Terminating websocket {}".format(ws))
-    self.notifiers.get(fileno).isEnabled(True)
-
-  def wsTerminated(self,ws):
-    """One of the managed WebSockets was terminated, remove it from our list"""
-    self.websockets.pop(ws.sock.fileno(), None)
-
-  def link_websocket_to_server(self, ws):
-    """
-    Call this from your WSGI handler when a websocket
-    has been created.
-    """
-    logger.debug("Added link to a new websocket {} with fileno {}".format(ws, ws.connection.fileno()))
-    print "Added link to a new websocket {} with fileno {}".format(ws, ws.connection.fileno())
-    # self.manager.add(ws)
-    self.websockets[ws.connection.fileno()] = ws
-    # notifier = qt.QSocketNotifier(ws.connection.fileno(),qt.QSocketNotifier.Read)
-    # self.notifiers[ws.connection.fileno()] = notifier
-    # notifier.connect('activated(int)', self.handle_ws_notify)
-    ws.opened(self)
-
   def server_close(self):
-    """
-    Properly initiate closing handshakes on
-    all websockets when the WSGI server terminates.
-    """
-    if hasattr(self, 'manager'):
-      self.manager.close_all()
-      self.manager.stop()
-      self.manager.join()
-      delattr(self, 'manager')
     WSGIServer.server_close(self)
-
 
   @classmethod
   def findFreePort(self,port=8080):
