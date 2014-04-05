@@ -14,8 +14,6 @@ except ImportError:
 import string,time
 import socket
 
-
-
 import logging, sys
 
 root = logging.getLogger()
