@@ -65,14 +65,9 @@ class WS:
   def close(self):
     pass
 
-  def handleWrite(self,fd):
-    logger.debug ( "Sending data: {}".format(len(self.send_buffer)))
-    while len(self.send_buffer):
-      self.sock.sendall(self.send_buffer.popleft())
-
   def handleRead(self):
     tmp = self.sock.read(2048)
-    logger.info("handleRead read {} bytes".format(tmp.size()))
+    logger.debug("handleRead read {} bytes".format(tmp.size()))
     if tmp.size() == 0:
       logger.debug("Got zero bytes, closing")
       self.close()

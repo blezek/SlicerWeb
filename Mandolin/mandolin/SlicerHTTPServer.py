@@ -11,7 +11,7 @@ from ws4py import format_addresses
 
 import logging
 logger = logging.getLogger('SlicerHTTPServer')
-logger.setLevel(logging.DEBUG)
+logger.setLevel(logging.INFO)
 
 
 class QuietHandler(WSGIRequestHandler):

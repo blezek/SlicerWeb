@@ -14,7 +14,7 @@ from ws4py.compat import basestring, unicode
 DEFAULT_READING_SIZE = 2
 
 logger = logging.getLogger('slicer.websocket')
-logger.setLevel(logging.INFO)
+logger.setLevel(logging.DEBUG)
 
 
 __all__ = ['WebSocket', 'EchoWebSocket', 'Heartbeat', 'CommandWebSocket']
@@ -402,8 +402,12 @@ class WebSocket(object):
         s = None
         return True
 
+    def on_connection(self,data={}):
+      pass
+
     def run(self):
         self.sock.connect('readyRead()', self.once)
+        self.on_connection()
 
 class EchoWebSocket(WebSocket):
     def received_message(self, message):
@@ -414,15 +418,39 @@ class EchoWebSocket(WebSocket):
         self.send(message.data, message.is_binary)
 
 
+import json
+
 class CommandWebSocket(WebSocket):
     def received_message(self, message):
         """
         Automatically sends back the provided ``message`` to
         its originating endpoint.
         """
-        self.send(message.data, message.is_binary)
+        # Echo back?
+        # self.send(message.data, message.is_binary)
 
         # Expects the message to be JSON object, with 2 fields: 'event' and 'data'
-
-
+        if not message.is_binary:
+          try:
+            logger.debug("Got message: {}".format(message.data))
+            frame = json.loads(message.data)
+            logger.debug("Decoded frame: {}".format(frame))
+            if 'data' in frame and 'type' in frame:
+              # Lookup the method
+              method = 'on_{}'.format(frame['type'])
+              m = getattr(self, method,None)
+              logger.debug("Method {} got {}".format(method, m))
+              if m:
+                m(frame.data)
+              else:
+                self.on_unknown(frame['type'], frame['data'])
+          except Exception as e:
+            logger.error ("Could not handle message {} error:{}\n".format(message.data,str(e)))
+    def on_unknown(self,t,d):
+      logger.error("Unknown frame type {} (looking for on_{}) with data:{}\n".format(t,t,d))
+    def emit(self,t,d):
+      message = {}
+      message['type'] = t
+      message['data'] = d
+      self.send ( json.dumps(message))
 

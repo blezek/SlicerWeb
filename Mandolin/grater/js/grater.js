@@ -28,11 +28,16 @@ require(['jquery', 'foundation'], function(jquery, foundation) {
 
 
 // For Grater to work, the model, angular and angularAMD packages are required
-require(["model", 'angular', 'angularAMD'], function(model, angular, angularAMD) {
+require(["model", 'angular', 'angularAMD', 'grater.io'], function(model, angular, angularAMD, io) {
   // Intentionally expose render and meshCollection as global variables
   render = new X.renderer3D();
   render.container = "render"
   render.init();
+
+  socket = io.connect("ws://" + location.hostname + ":9999")
+  socket.on("hello", function(data) {
+    console.log(data);
+  })
 
   meshCollection = new model.MeshCollection();
 
@@ -97,7 +102,7 @@ require(["model", 'angular', 'angularAMD'], function(model, angular, angularAMD)
     // Fetch the collection every 2 seconds
     (function tock() {
       meshCollection.fetch({remove:true});
-      $timeout(tock,2000);
+      $timeout(tock,20000);
     })();
   });
 
@@ -127,7 +132,7 @@ require(["model", 'angular', 'angularAMD'], function(model, angular, angularAMD)
         $scope.render.camera.up = camera.get('view_up')
         $scope.render.camera.focus = camera.get('focal_point')
       }
-      $timeout(cameratock,500);
+      $timeout(cameratock,50000);
     })();
   })
 

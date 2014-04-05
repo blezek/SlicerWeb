@@ -1,7 +1,9 @@
 
 from SlicerHTTPServer import SlicerHTTPServer
 from websocketserver import WebSocketServer
+from websocket import CommandWebSocket
 from mandolin.app import app
+from mandolin.app import SlicerWebSocket
 # These are the URLs that we will respond to
 
 from ws4py.websocket import WebSocket
@@ -31,7 +33,7 @@ class SlicerREST:
     self.server.set_app ( app )
 
     # WebSockets
-    self.ws_server = WebSocketServer(port=websocket_address[1])
+    self.ws_server = WebSocketServer(port=websocket_address[1], websocket_class=SlicerWebSocket)
 
   def start(self):
     self.logMessage ( "starting REST")
