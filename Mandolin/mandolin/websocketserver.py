@@ -27,21 +27,28 @@ Sec-WebSocket-Version: 13\r\n'
 # WebSocket-Location: {location}\r\n'
 
 
-class WebSocketServer:
+class WebSocketServer(object):
   def __init__(self, port=9999, websocket_class=EchoWebSocket):
     import socket
     # self.sock = sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    self.server = qt.QTcpServer()
-    self.server.listen(qt.QHostAddress("0.0.0.0"),port)
-    self.server.connect('newConnection()', self.handleConnect)
     self.websocket_class = websocket_class
     self.websockets = []
+    self.server = None
+    self.port = port
 
   def handleConnect(self):
     logger.debug("Got connection")
     socket = self.server.nextPendingConnection()
     logger.debug("Got connection from {}".format(socket.peerName()))
-    WS(socket, websocket_class=self.websocket_class, websockets=self.websockets)
+    WS(socket, websocket_class=self.websocket_class, websockets=self.websockets, server=self)
+
+  def start(self):
+    self.server = qt.QTcpServer()
+    self.server.listen(qt.QHostAddress("0.0.0.0"),self.port)
+    self.server.connect('newConnection()', self.handleConnect)
+
+  def stop(self):
+    self.close()
 
   def close(self):
     for ws in self.websockets:
@@ -50,9 +57,13 @@ class WebSocketServer:
       except:
         logger.error("Failed to close websocket")
     self.server.close()
- 
+
+  def remove(self,webSocket):
+    if webSocket in self.websockets:
+      self.websockets.remove(webSocket)
+
 class WS:
-  def __init__(self, socket, websocket_class=None, websockets=None):
+  def __init__(self, socket, websocket_class=None, websockets=None, server=None):
     self.handshaken = False 
     self.data = ''
     self.header = ''
@@ -61,7 +72,8 @@ class WS:
     self.sock.connect('readyRead()', self.handleRead)
     self.websocket_class = websocket_class
     self.websockets = websockets
- 
+    self.server = server
+
   def close(self):
     pass
 
@@ -97,31 +109,8 @@ class WS:
         from mandolin.sws import WebSocket
         ws = self.websocket_class(self.sock)
         self.websockets.append(ws)
+        ws.setServer(self.server)
         ws.run()
       else:
         logger.debug("Did not get full header")
     
-
-# while True:
-#     if handshaken == False:
-#         header += client.recv(16)
-#         if header.find('\r\n\r\n') != -1:
-#             data = header.split('\r\n\r\n', 1)[1]
-#             handshaken = True
-#             client.send(handshake)
-#     else:
-#             tmp = client.recv(128)
-#             data += tmp;
- 
-#             validated = []
- 
-#             msgs = data.split('\xff')
-#             data = msgs.pop()
- 
-#             for msg in msgs:
-#                 if msg[0] == '\x00':
-#                     validated.append(msg[1:])
- 
-#             for v in validated:
-#                 print v
-#                 client.send('\x00' + v + '\xff')

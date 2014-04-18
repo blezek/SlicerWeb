@@ -141,13 +141,24 @@ class MandolinWidget:
     self.guiMessages = self.logToGUI.checked
 
   def setup(self):
-
     # reload button
     self.reloadButton = qt.QPushButton("Reload Mandolin")
     self.reloadButton.name = "WebServer Reload"
     self.reloadButton.toolTip = "Reload this module."
     self.layout.addWidget(self.reloadButton)
     self.reloadButton.connect('clicked(bool)', self.onReload)
+
+    # Camera node selector
+    self.cameraNodeSelector = cameraNodeSelector = slicer.qMRMLNodeComboBox()
+    cameraNodeSelector.objectName = 'cameraNodeSelector'
+    cameraNodeSelector.toolTip = "Select a camera to link to attached browsers."
+    cameraNodeSelector.nodeTypes = ['vtkMRMLCameraNode']
+    cameraNodeSelector.noneEnabled = False
+    cameraNodeSelector.addEnabled = False
+    cameraNodeSelector.removeEnabled = False
+    self.layout.addWidget( cameraNodeSelector)
+    cameraNodeSelector.setMRMLScene(slicer.mrmlScene)
+    self.parent.connect('mrmlSceneChanged(vtkMRMLScene*)', cameraNodeSelector, 'setMRMLScene(vtkMRMLScene*)')
 
     self.log = qt.QTextEdit()
     self.log.readOnly = True
@@ -184,12 +195,14 @@ class MandolinWidget:
     self.layout.addWidget(self.localConnectionButton)
     self.localConnectionButton.connect('clicked()', self.openLocalConnection)
 
-
     self.logic = MandolinLogic(logMessage=self.logMessage)
     self.logic.start()
+    cameraNodeSelector.connect('currentNodeChanged(vtkMRMLNode*)', self.logic.server.ws_server.setCameraNode)
+    self.logic.server.ws_server.setCameraNode ( cameraNodeSelector.currentNode())
 
     # Add spacer to layout
     self.layout.addStretch(1)
+
 
   def openLocalConnection(self):
     qt.QDesktopServices.openUrl(qt.QUrl('http://localhost:8080'))
@@ -218,6 +231,7 @@ class MandolinWidget:
       mandolin = reload ( mandolin )
       reload ( mandolin.mrml )
       reload ( mandolin.app )
+      reload ( mandolin.endpoint )
       SlicerREST = reload ( SlicerREST )
     except:
       self.logMessage ( "Error reloading SlicerRest")

@@ -38,6 +38,12 @@ require(["model", 'angular', 'angularAMD', 'grater.io'], function(model, angular
   socket.on("hello", function(data) {
     console.log(data);
   })
+  socket.on("camera", function(data) {
+    // camera = $scope.activeCamera
+    render.camera.position = data.position
+    render.camera.up = data.view_up
+    render.camera.focus = data.focal_point
+  })
 
   meshCollection = new model.MeshCollection();
 
@@ -125,14 +131,7 @@ require(["model", 'angular', 'angularAMD', 'grater.io'], function(model, angular
     // Every 500ms, update the cameras
     (function cameratock() {
       $scope.cameraCollection.fetch({remove:true});
-      if ( $scope.activeCamera ) {
-        camera = $scope.cameraCollection.get($scope.activeCamera)
-        // camera = $scope.activeCamera
-        $scope.render.camera.position = camera.get('position')
-        $scope.render.camera.up = camera.get('view_up')
-        $scope.render.camera.focus = camera.get('focal_point')
-      }
-      $timeout(cameratock,50000);
+      $timeout(cameratock,5000);
     })();
   })
 

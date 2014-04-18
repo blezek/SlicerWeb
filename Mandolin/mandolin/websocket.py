@@ -64,7 +64,7 @@ class Heartbeat(threading.Thread):
 class WebSocket(object):
     """ Represents a websocket endpoint and provides a high level interface to drive the endpoint. """
 
-    def __init__(self, sock, protocols=None, extensions=None, environ=None, heartbeat_freq=None):
+    def __init__(self, sock, protocols=None, extensions=None, environ=None, heartbeat_freq=None,server=None):
         """ The ``sock`` is an opened connection
         resulting from the websocket handshake.
 
@@ -127,6 +127,8 @@ class WebSocket(object):
         Set this to `0` or `None` to disable it entirely.
         """
 
+        self.server = server
+        
         self._local_address = None
         self._peer_address = None
 
@@ -245,6 +247,7 @@ class WebSocket(object):
 
         # self.sock.sendall(b)
         self.sock.write(b)
+        self.sock.flush();
 
     def send(self, payload, binary=False):
         """
@@ -327,6 +330,7 @@ class WebSocket(object):
         good and cleanup resources by unsetting
         the `environ` and `stream` attributes.
         """
+        logger.info("WebSocket.terminate")
         s = self.stream
 
         self.client_terminated = self.server_terminated = True
@@ -407,6 +411,7 @@ class WebSocket(object):
 
     def run(self):
         self.sock.connect('readyRead()', self.once)
+        self.sock.connect('disconnected()', self.terminate)
         self.on_connection()
 
 class EchoWebSocket(WebSocket):
@@ -421,6 +426,14 @@ class EchoWebSocket(WebSocket):
 import json
 
 class CommandWebSocket(WebSocket):
+    def setServer(self,server):
+        self.server = server
+
+    def terminate(self):
+        logger.info("Terminating CommandWebSocket connection")
+        WebSocket.terminate(self)
+        self.server.remove(self)
+
     def received_message(self, message):
         """
         Automatically sends back the provided ``message`` to
